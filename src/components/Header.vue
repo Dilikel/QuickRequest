@@ -6,9 +6,9 @@ const emits = defineEmits(['openMenu']);
 <template>
 	<header class="header">
 		<div class="container">
-      <div class="logo">
+      <router-link to="/" class="logo">
         QuickRequest
-      </div>
+      </router-link>
       <div class="menu">
         <ul class="menu-list">
           <li class="menu-item">
@@ -22,7 +22,7 @@ const emits = defineEmits(['openMenu']);
         </ul>
       </div>
       <div class="header-action">
-        <button class="start_btn">Начать сейчас</button>
+        <router-link to="/login" class="start_btn">Начать сейчас</router-link>
       </div>
       <div class="mobile-menu-btn" @click="emits('openMenu')">
         <img src="/icons/menu-icon.svg" alt="menu-icon">
@@ -58,6 +58,11 @@ const emits = defineEmits(['openMenu']);
   color: #fff;
   cursor: pointer;
   font-size: 28px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.logo:hover {
+  color: #ff8a00;
 }
 
 .menu-list {
@@ -97,6 +102,7 @@ const emits = defineEmits(['openMenu']);
   cursor: pointer;
   transition: background 0.3s ease;
   user-select: none;
+  text-decoration: none;
 }
 
 .start_btn:hover {
