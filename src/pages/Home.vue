@@ -9,7 +9,7 @@
           <h1>Идеальный сервис для создания REST API</h1>
           <p>Создавайте, управляйте и масштабируйте свои API с Quick Request. Простота и мощь — в одном месте.</p>
           <div class="action-buttons">
-            <button class="primary-button">Начать бесплатно</button>
+            <router-link to="/login" class="primary-button">Начать бесплатно</router-link>
             <button class="secondary-button">Узнать больше</button>
           </div>
         </div>
@@ -92,6 +92,7 @@
   cursor: pointer;
   transition: transform 0.3s ease;
   user-select: none;
+  text-decoration: none;
 }
 
 .primary-button {

@@ -30,7 +30,7 @@ const closeMenu = () => {
         <img src="/icons/documentation_icon.svg" alt="documentation_icon">
         <router-link to="/">Документация</router-link>
       </li>
-      <li class="menu-item start-btn">Войти</li>
+      <li class="menu-item start-btn"><router-link to="/login" @click="closeMenu">Войти</router-link></li>
     </ul>
   </div>
 </template>

@@ -93,21 +93,25 @@ const emits = defineEmits(['openMenu']);
 }
 
 .start_btn {
-  background: #ef8916;
+  background: linear-gradient(90deg, #ff8a00, #ff6b6b);
   color: white;
-  padding: 10px 25px;
+  padding: 12px 30px;
   border: none;
   border-radius: 25px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s ease;
   user-select: none;
   text-decoration: none;
+  transition: background 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
 }
 
 .start_btn:hover {
-  background: #e67600;
+  background: linear-gradient(90deg, #ff7a00, #ff5656);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(255, 107, 107, 0.7);
 }
+
 
 .mobile-menu-btn img{
   width: 35px;
