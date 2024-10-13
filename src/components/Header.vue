@@ -1,6 +1,8 @@
 <script setup>
-</script>
+import { defineEmits } from 'vue';
 
+const emits = defineEmits(['openMenu']);
+</script>
 <template>
 	<header class="header">
 		<div class="container">
@@ -22,7 +24,7 @@
       <div class="header-action">
         <button class="start_btn">Начать сейчас</button>
       </div>
-      <div class="mobile-menu-btn">
+      <div class="mobile-menu-btn" @click="emits('openMenu')">
         <img src="/icons/menu-icon.svg" alt="menu-icon">
       </div>
 		</div>
