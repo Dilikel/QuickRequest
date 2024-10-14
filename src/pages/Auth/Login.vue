@@ -1,6 +1,46 @@
 <script setup>
-import ErrorDisplay from "@/components/Register/ErrorDisplay.vue";
+import { ref, defineEmits, onMounted } from "vue";
+import axios from "axios";
 import LoginSuccess from "@/components/Login/LoginSuccess.vue";
+import ErrorDisplay from "@/components/Register/ErrorDisplay.vue";
+import Cookies from 'js-cookie';
+
+const emit = defineEmits();
+const login_url = `${import.meta.env.API_URL}/login`;
+
+const email = ref("");
+const password = ref("");
+const message = ref("");
+const isSuccess = ref(false);
+
+
+onMounted(() => {
+  const loginSuccess = Cookies.get("loginSuccess");
+  if (loginSuccess === "true") {
+    isSuccess.value = true;
+  }
+});
+
+const loginUser = async () => {
+  try {
+    const response = await axios.post(login_url, {
+      email: email.value,
+      password: password.value,
+    });
+    const token = response.data.access_token;
+    Cookies.set('token', token, { expires: 7 });
+    Cookies.set("loginSuccess", "true", { expires: 7 });
+    message.value = "Вы успешно вошли!";
+    email.value = "";
+    password.value = "";
+    isSuccess.value = true;
+    emit("userAuthenticated");
+    window.location.reload();
+  } catch (error) {
+    message.value = error.response?.data?.detail || "Login failed.";
+    isSuccess.value = false;
+  }
+};
 </script>
 
 <template>
@@ -13,7 +53,7 @@ import LoginSuccess from "@/components/Login/LoginSuccess.vue";
           <input v-model="password" type="password" placeholder="Пароль:" class="input-field" required />
         </div>
         <button type="submit" class="submit-button">Войти</button>
-        <router-link to="/Register" class="register-button">Регистрация</router-link>
+        <router-link to="/register" class="register-button">Регистрация</router-link>
       </form>
       <ErrorDisplay v-if="!isSuccess && message" :message="message" />
       <LoginSuccess v-if="isSuccess" />

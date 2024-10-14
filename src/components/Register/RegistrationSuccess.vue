@@ -1,13 +1,12 @@
 <script setup>
 </script>
 
-
 <template>
   <div class="success-message">
     <div class="icon-wrapper">
       <img src="/icons/success-icon.svg" alt="success-icon" class="success-icon" />
     </div>
-    <h2>Вы успешно вошли в аккаунт!</h2>
+    <h2>Регистрация прошла успешно!</h2>
     <p>Добро пожаловать в <span class="brand-name">QuickRequest!</span></p>
     <router-link to="/" class="cta-button">Перейти на главную</router-link>
   </div>
