@@ -6,7 +6,7 @@ import RegistrationSuccess from '@/components/Register/RegistrationSuccess.vue';
 import Cookies from 'js-cookie';
 
 
-const register_url = `${import.meta.env.API_URL}/register`;
+const register_url = `${import.meta.env.VITE_API_URL}/register`;
 const emit = defineEmits();
 
 const name = ref('');
@@ -114,6 +114,7 @@ watch(confirmPassword, (newConfirmPassword) => {
   font-size: 14px;
   color: white;
   margin-top: -10px;
+  margin-left: 15px;
 }
 .register-wrapper {
   display: flex;

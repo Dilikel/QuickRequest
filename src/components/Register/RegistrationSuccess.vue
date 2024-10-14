@@ -13,7 +13,17 @@
 </template>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+
 .success-message {
+  background-color: #121212;
+  backdrop-filter: blur(20px);
   box-shadow: 0 15px 35px rgba(25, 25, 25, 0.5);
   padding: 30px;
   text-align: center;
@@ -48,27 +58,27 @@ p {
 
 .brand-name {
   font-weight: 700;
-  color: #ffeb3b;
+  color:  #ff8a00;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .cta-button {
   padding: 12px 24px;
-  background-color: #ffeb3b;
+  background: linear-gradient(90deg, #ff8a00, #ff6b6b);
   border: none;
   border-radius: 30px;
-  color: black;
+  color: white;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0px 5px 15px rgba(255, 235, 59, 0.3);
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
   text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.4s ease;
 }
 
 .cta-button:hover {
-  background-color: #fdd835;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(255, 107, 107, 0.8);
 }
 
 @keyframes slide-in {

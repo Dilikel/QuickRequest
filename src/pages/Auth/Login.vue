@@ -1,12 +1,12 @@
 <script setup>
-import { ref, defineEmits, onMounted } from "vue";
+import { ref, defineEmits, onMounted} from "vue";
 import axios from "axios";
 import LoginSuccess from "@/components/Login/LoginSuccess.vue";
 import ErrorDisplay from "@/components/Register/ErrorDisplay.vue";
 import Cookies from 'js-cookie';
 
 const emit = defineEmits();
-const login_url = `${import.meta.env.API_URL}/login`;
+const login_url = `${import.meta.env.VITE_API_URL}/login`;
 
 const email = ref("");
 const password = ref("");
