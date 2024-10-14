@@ -5,7 +5,7 @@ import HeaderAuth from "@/components/HeaderAuth/HeaderAuth.vue";
 import HeaderMobileMenuAuth from "@/components/HeaderAuth/HeaderMobileMenuAuth.vue";
 import Footer from "@/components/Footer.vue";
 import Loader from "@/components/Loader.vue";
-import { ref, onMounted, provide, watch } from 'vue';
+import { ref, onMounted} from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -65,7 +65,7 @@ onMounted(async () => {
     <Header v-if="!isAuthenticated" @openMenu="openMenu"/>
     <HeaderMobileMenu v-if="!isAuthenticated" :isOpen="isMenuOpen" @closeMenu="closeMenu"/>
     <HeaderAuth v-else @openMenu="openMenu" :name="userName"/>
-    <HeaderMobileMenu v-if="!isAuthenticated" :isOpen="isMenuOpen" @closeMenu="closeMenu"/>
+    <HeaderMobileMenuAuth v-if="!isAuthenticated" :isOpen="isMenuOpen" @closeMenu="closeMenu"/>
     <router-view/>
     <Footer/>
   </div>
