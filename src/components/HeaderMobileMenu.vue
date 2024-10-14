@@ -23,11 +23,9 @@ const closeMenu = () => {
     </div>
     <ul class="menu-list">
       <li class="menu-item">
-        <img src="/icons/home_icon.svg" alt="home">
-        <router-link to="/">Главная</router-link>
+        <router-link to="/" @click="closeMenu">Главная</router-link>
       </li>
       <li class="menu-item">
-        <img src="/icons/documentation_icon.svg" alt="documentation_icon">
         <router-link to="/">Документация</router-link>
       </li>
       <li class="menu-item start-btn"><router-link to="/login" @click="closeMenu">Войти</router-link></li>
@@ -94,17 +92,13 @@ const closeMenu = () => {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.menu-item img {
-  width: 28px;
-  height: 28px;
-}
-
 .menu-item a {
   color: white;
   font-size: 20px;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.3s ease;
+  margin-left: 10px;
 }
 
 .start-btn {

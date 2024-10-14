@@ -11,12 +11,10 @@ const emits = defineEmits(['openMenu']);
       </router-link>
       <div class="menu">
         <ul class="menu-list">
-          <li class="menu-item">
-            <img src="/icons/home_icon.svg" alt="home">
+          <router-link to="/" class="menu-item">
             <a>Главная</a>
-          </li>
+          </router-link>
           <li class="menu-item">
-            <img src="/icons/documentation_icon.svg" alt="documentation_icon">
             <a>Документация</a>
           </li>
         </ul>
@@ -71,11 +69,6 @@ const emits = defineEmits(['openMenu']);
   gap: 20px;
 }
 
-.menu-item img {
-  width: 35px;
-  height: 35px;
-  user-select: none;
-}
 
 .menu-item {
   display: flex;
@@ -86,6 +79,7 @@ const emits = defineEmits(['openMenu']);
   color: #f0f0f0;
   font-size: 16px;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 .menu-item:hover {
