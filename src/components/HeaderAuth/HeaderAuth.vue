@@ -25,6 +25,7 @@ const emits = defineEmits(['openMenu']);
         </ul>
       </div>
       <router-link to="/profile" class="user">
+        <img src="/icons/user-icon.svg" alt="user-icon">
         <p>{{ name }}</p>
       </router-link>
       <div class="mobile-menu-btn" @click="emits('openMenu')">
@@ -100,10 +101,14 @@ const emits = defineEmits(['openMenu']);
   display: none;
 }
 
-.user:hover {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.1);
+.user img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
+
+
 .user {
   display: flex;
   gap: 5px;
@@ -118,10 +123,13 @@ const emits = defineEmits(['openMenu']);
   font-size: 18px;
   cursor: pointer;
   padding: 5px 10px;
-  transition: background 0.3s ease, transform 0.3s ease;
   border-radius: 10px;
+  transition: color 0.3s ease;
 }
 
+.user p:hover {
+  color: #ff8a00;
+}
 
 @media (max-width: 1024px) {
   .header {

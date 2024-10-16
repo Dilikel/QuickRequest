@@ -183,7 +183,6 @@ const loginUser = async () => {
 @media (max-width: 768px) {
   .login-container {
     padding: 30px;
-    border-radius: 20px;
   }
 
   .login-title {
@@ -207,11 +206,10 @@ const loginUser = async () => {
 
 @media (max-width: 480px) {
   .login-wrapper {
-    min-height: 67vh;
+    padding: 30px;
   }
   .login-container {
     padding: 20px;
-    border-radius: 15px;
   }
 
   .login-title {
@@ -219,17 +217,10 @@ const loginUser = async () => {
   }
 
   .input-field {
+    width: 100%;
     padding: 10px;
   }
 
-  .submit-button, .register-button {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .login-wrapper {
-    padding: 8px;
-  }
 }
 </style>
 

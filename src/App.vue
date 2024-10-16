@@ -8,6 +8,7 @@ import Loader from "@/components/Loader.vue";
 import { ref, onMounted} from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import router from '@/router';
 
 const isAuthenticated = ref(false);
 const userName = ref('');
@@ -30,6 +31,7 @@ const authenticateUser = async () => {
 
     if (data.new_access_token) {
       Cookies.set('token', data.new_access_token, { expires: 7 });
+      router.push('/projects');
     }
   } catch (error) {
     console.error('Ошибка авторизации:', error);
@@ -64,8 +66,8 @@ onMounted(async () => {
   <div v-else>
     <Header v-if="!isAuthenticated" @openMenu="openMenu"/>
     <HeaderMobileMenu v-if="!isAuthenticated" :isOpen="isMenuOpen" @closeMenu="closeMenu"/>
-    <HeaderAuth v-else @openMenu="openMenu" :name="userName"/>
-    <HeaderMobileMenuAuth v-if="!isAuthenticated" :isOpen="isMenuOpen" @closeMenu="closeMenu"/>
+    <HeaderAuth v-if="isAuthenticated" @openMenu="openMenu" :name="userName"/>
+    <HeaderMobileMenuAuth v-if="isAuthenticated" :isOpen="isMenuOpen" @closeMenu="closeMenu"/>
     <router-view/>
     <Footer/>
   </div>

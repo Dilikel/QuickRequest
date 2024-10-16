@@ -221,6 +221,9 @@ watch(confirmPassword, (newConfirmPassword) => {
 }
 
 @media (max-width: 480px) {
+  .register-wrapper {
+    padding: 30px;
+  }
   .register-container {
     padding: 20px;
   }
