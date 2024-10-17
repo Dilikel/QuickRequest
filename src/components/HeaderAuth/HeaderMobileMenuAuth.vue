@@ -23,7 +23,7 @@ const closeMenu = () => {
     </div>
     <ul class="menu-list">
       <li class="menu-item">
-        <router-link to="/" @click="closeMenu">Главная</router-link>
+        <router-link to="/projects" @click="closeMenu">Главная</router-link>
       </li>
       <li class="menu-item">
         <router-link to="/">Документация</router-link>

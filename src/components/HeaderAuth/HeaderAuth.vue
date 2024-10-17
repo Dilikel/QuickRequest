@@ -11,12 +11,12 @@ const emits = defineEmits(['openMenu']);
 <template>
   <header class="header">
     <div class="container">
-      <router-link to="/" class="logo">
+      <router-link to="/projects" class="logo">
         QuickRequest
       </router-link>
       <div class="menu">
         <ul class="menu-list">
-          <router-link to="/" class="menu-item">
+          <router-link to="/projects" class="menu-item">
             <a>Главная</a>
           </router-link>
           <li class="menu-item">
