@@ -4,7 +4,6 @@ import Login from "@/pages/Auth/Login.vue";
 import Register from "@/pages/Auth/Register.vue";
 import Profile from "@/pages/User/Profile.vue";
 import Projects from "@/pages/Projects.vue";
-import Cookies from 'js-cookie';
 
 const routes = [
     {
