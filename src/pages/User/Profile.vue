@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 
 const router = useRouter();
 const token = Cookies.get('token');
-const protected_url = `${import.meta.env.VITE_API_URL}/protected`;
+const protected_url = `${import.meta.env.VITE_API_URL}/me`;
 
 const user = ref({
   name: '',

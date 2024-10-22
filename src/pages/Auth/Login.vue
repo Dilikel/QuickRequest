@@ -27,7 +27,7 @@ const loginUser = async () => {
       email: email.value,
       password: password.value,
     });
-    const token = response.data.access_token;
+    const token = response.data.token;
     Cookies.set('token', token, { expires: 7 });
     Cookies.set("loginSuccess", "true", { expires: 7 });
     message.value = "Вы успешно вошли!";

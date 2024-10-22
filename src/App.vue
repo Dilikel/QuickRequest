@@ -13,7 +13,7 @@ import router from '@/router';
 const isAuthenticated = ref(false);
 const userName = ref('');
 const token = Cookies.get('token');
-const auth_url = `${import.meta.env.VITE_API_URL}/auth`;
+const auth_url = `${import.meta.env.VITE_API_URL}/me`;
 const isLoaderVisible = ref(true);
 
 
@@ -29,8 +29,8 @@ const authenticateUser = async () => {
     isAuthenticated.value = true;
     userName.value = data.name;
 
-    if (data.new_access_token) {
-      Cookies.set('token', data.new_access_token, { expires: 7 });
+    if (data.token) {
+      Cookies.set('token', data.token, { expires: 7 });
       router.push('/projects');
     }
   } catch (error) {
