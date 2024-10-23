@@ -28,8 +28,8 @@ const loginUser = async () => {
       password: password.value,
     });
     const token = response.data.token;
-    Cookies.set('token', token, { expires: 7 });
-    Cookies.set("loginSuccess", "true", { expires: 7 });
+    Cookies.set('token', token, { expires: 31 });
+    Cookies.set("loginSuccess", "true", { expires: 31 });
     message.value = "Вы успешно вошли!";
     email.value = "";
     password.value = "";

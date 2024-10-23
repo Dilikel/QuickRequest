@@ -30,7 +30,7 @@ const authenticateUser = async () => {
     userName.value = data.name;
 
     if (data.token) {
-      Cookies.set('token', data.token, { expires: 7 });
+      Cookies.set('token', data.token, { expires: 31 });
       router.push('/projects');
     }
   } catch (error) {

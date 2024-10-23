@@ -21,7 +21,7 @@ const fetchUserData = async () => {
       },
     });
     if (data.new_access_token) {
-      Cookies.set('token', data.new_access_token, { expires: 7 });
+      Cookies.set('token', data.new_access_token, { expires: 31 });
     }
     user.value = data;
   } catch (error) {
