@@ -1,30 +1,64 @@
 <script setup>
-import {ref} from "vue";
+import ProjectCardList from "@/components/Projects/ProjectCardList.vue";
+import CreateProject from "@/components/Projects/CreateProject.vue";
+import axios from "axios";
+import { ref, onMounted } from "vue";
+import Cookies from 'js-cookie';
 
-const list = true
+const items = ref([]);
+const list = ref(true);
+const showCreateProjectModal = ref(false);
+const items_url = `${import.meta.env.VITE_API_URL}/projects/`;
+const token = Cookies.get('token');
+
+const fetchItems = async () => {
+  try {
+    const response = await axios.get(items_url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    items.value = response.data;
+    list.value = items.value.length > 0;
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+  }
+};
+
+const toggleCreateProjectModal = () => {
+  showCreateProjectModal.value = !showCreateProjectModal.value;
+};
+
+onMounted(() => {
+  fetchItems();
+});
 </script>
 
 <template>
-<div class="projects">
-  <div class="container" v-if="list">
-    <div class="title">
-      <h1>Ваши проекты</h1>
-      <div class="action">
-        <button class="create-btn">
-          <img src="/icons/package_plus.svg" alt="package">
-          Создать проект
-        </button>
+  <div class="projects">
+    <div class="container">
+      <div class="title">
+        <h1>Ваши проекты</h1>
+        <div class="action">
+          <button class="create-btn" @click="toggleCreateProjectModal">
+            <img src="/icons/package_plus.svg" alt="package">
+            Создать проект
+          </button>
+        </div>
+      </div>
+      <div class="project-list" v-if="list">
+        <ProjectCardList :items="items" />
+      </div>
+      <div class="NoneList" v-else>
+        <div class="NoneListInfo">
+          <img src="/public/icons/package-icon.svg" alt="package">
+          <h1>Список проектов пока пуст</h1>
+          <p>У вас пока нет проектов. Создайте новый проект</p>
+        </div>
       </div>
     </div>
+    <CreateProject v-if="showCreateProjectModal" @close="toggleCreateProjectModal" />
   </div>
-  <div class="NoneList" v-else="list">
-    <div class="NoneListInfo">
-      <img src="/public/icons/package-icon.svg" alt="package">
-      <h1>Список проектов пока пуст</h1>
-      <p>У вас пока нет проектов. Создайте новый проект</p>
-    </div>
-  </div>
-</div>
 </template>
 
 <style scoped>
@@ -38,7 +72,6 @@ const list = true
 .projects {
   margin-top: 20px;
 }
-
 
 .container {
   max-width: 1240px;
@@ -102,8 +135,51 @@ const list = true
 
 @media (max-width: 1024px) {
   .projects {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 15px;
+  }
+
+  .create-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .title h1 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    text-align: center;
+  }
+
+  .create-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .project-list {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .title h1 {
+    font-size: 18px;
+  }
+
+  .create-btn {
+    font-size: 13px;
+  }
+
+  .NoneListInfo h1 {
+    font-size: 18px;
+  }
+
+  .NoneListInfo p {
+    font-size: 14px;
   }
 }
 </style>

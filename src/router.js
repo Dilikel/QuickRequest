@@ -4,6 +4,7 @@ import Login from "@/pages/Auth/Login.vue";
 import Register from "@/pages/Auth/Register.vue";
 import Profile from "@/pages/User/Profile.vue";
 import Projects from "@/pages/Projects.vue";
+import Cookies from 'js-cookie';
 
 const routes = [
     {
@@ -41,5 +42,17 @@ const router = createRouter({
     routes,
 });
 
+router.beforeEach((to, from, next) => {
+    const token = Cookies.get('token');
+    const isAuthenticated = !!token;
+    if (isAuthenticated && to.name === 'Home') {
+        next({ name: 'Projects' });
+    }
+    else if (to.meta.requiresAuth && !isAuthenticated) {
+        next({ name: 'Login' });
+    } else {
+        next();
+    }
+});
 
 export default router;
