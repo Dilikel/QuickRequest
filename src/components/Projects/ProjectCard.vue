@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import router from "@/router.js";
 
 const props = defineProps({
   projectName: {
@@ -25,10 +26,14 @@ const iconColor = computed(() => {
 });
 
 const firstLetter = computed(() => props.projectName.charAt(0).toUpperCase());
+
+const goToProject = () => {
+    router.push({name: 'Project', params: {id: props.projectId}});
+}
 </script>
 
 <template>
-  <div class="project-card">
+  <div class="project-card" @click="goToProject">
     <div class="icon" :style="{ backgroundColor: iconColor }">
       <span>{{ firstLetter }}</span>
     </div>
@@ -75,6 +80,7 @@ const firstLetter = computed(() => props.projectName.charAt(0).toUpperCase());
   font-weight: bold;
   color: white;
   margin-right: 20px;
+  user-select: none;
 }
 
 .details {

@@ -4,6 +4,7 @@ import Login from "@/pages/Auth/Login.vue";
 import Register from "@/pages/Auth/Register.vue";
 import Profile from "@/pages/User/Profile.vue";
 import Projects from "@/pages/Projects.vue";
+import Project from "@/pages/Project.vue";
 import Cookies from 'js-cookie';
 
 const routes = [
@@ -34,6 +35,12 @@ const routes = [
         name: 'Projects',
         component: Projects,
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/project/:id',
+        name: 'Project',
+        component: Project,
+        props: true,
     },
 ];
 
