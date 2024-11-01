@@ -37,7 +37,7 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
-        path: '/project/:id',
+        path: '/projects/:id',
         name: 'Project',
         component: Project,
         props: true,

@@ -1,8 +1,9 @@
 <script setup>
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { onMounted, ref } from "vue";
+import {computed, onMounted, ref} from "vue";
 import RemoveProject from "@/components/Projects/RemoveProject.vue";
+import ResourceCardList from "@/components/Projects/ResourceCardList.vue";
 
 const items_url = `${import.meta.env.VITE_API_URL}/projects/`;
 const token = Cookies.get('token');
@@ -17,9 +18,6 @@ const props = defineProps({
 const project = ref({
   name: "",
   projectId: "",
-  description: "",
-  created_at: "",
-  updated_at: ""
 });
 
 const isRemoveProjectOpen = ref(false);
@@ -47,8 +45,45 @@ const closeRemoveProject = () => {
   isRemoveProjectOpen.value = false;
 };
 
+const iconColor = computed(() => {
+  const firstLetter = project.value.name ? project.value.name.charAt(0).toUpperCase() : '';
+  if ('ABC'.includes(firstLetter)) return '#ff8a00';
+  if ('DEF'.includes(firstLetter)) return '#ff6b6b';
+  if ('GHI'.includes(firstLetter)) return '#4CAF50';
+  if ('JKL'.includes(firstLetter)) return '#2196F3';
+  if ('MNO'.includes(firstLetter)) return '#9C27B0';
+  if ('PQR'.includes(firstLetter)) return '#FF5722';
+  if ('STU'.includes(firstLetter)) return '#795548';
+  return '#607D8B';
+});
+
+
+const firstLetter = computed(() => {
+  return project.value.name ? project.value.name.charAt(0).toUpperCase() : '';
+});
+
+
+const items = ref([]);
+const list = ref(true);
+
+const fetchItems = async () => {
+  try {
+    const response = await axios.get(`${items_url}${props.id}/resource`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    items.value = response.data;
+    list.value = items.value.length > 0;
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+  }
+};
+
+
 onMounted(() => {
   fetchProject();
+  fetchItems();
 });
 </script>
 
@@ -78,19 +113,32 @@ onMounted(() => {
           </button>
         </div>
       </div>
-
-      <div class="project-card">
-        <h1>{{ project.name }}</h1>
-        <p class="project-id">ID проекта: {{ project.projectId }}</p>
-        <p class="description">{{ project.description }}</p>
-        <div class="project-meta">
-          <span>Создан: {{ new Date(project.created_at).toLocaleDateString() }}</span>
-          <span>Обновлен: {{ new Date(project.updated_at).toLocaleDateString() }}</span>
+      <div class="info">
+        <div class="name-and-icon">
+          <div class="icon" :style="{ backgroundColor: iconColor }">
+            <span>{{ firstLetter }}</span>
+          </div>
+          <h1>{{project.name}}</h1>
+        </div>
+        <div class="id">
+          <p>ID: {{project.projectId}}</p>
+        </div>
+      </div>
+      <div class="resource-list" v-if="list">
+        <ResourceCardList :items="items" />
+      </div>
+      <div class="NoneList" v-else>
+        <div class="NoneListInfo">
+          <img src="/public/icons/package-icon.svg" alt="package">
+          <h1>Список ресурсов пока пуст</h1>
+          <p>У вас пока нет ресурсов. Создайте новый ресурс</p>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+
 <style scoped>
 * {
   margin: 0;
@@ -105,7 +153,10 @@ onMounted(() => {
   min-height: 80vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+
+.resource-list {
+  width: 100%;
 }
 
 .menu {
@@ -151,6 +202,7 @@ onMounted(() => {
 .panel img {
   width: 30px;
   height: 30px;
+  user-select: none;
 }
 
 .panel button:hover {
@@ -187,64 +239,69 @@ onMounted(() => {
   box-shadow: 0 10px 25px rgba(255, 107, 107, 0.7);
 }
 
-.project-card {
-  background: linear-gradient(135deg, #f0f4f8, #e0e7ed);
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 40px 30px;
-  width: 100%;
-  max-width: 600px;
-  text-align: center;
-  transition: box-shadow 0.3s ease;
-}
-.project-card:hover {
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
 
-.project-card h1 {
-  font-size: 32px;
-  color: #333;
-  margin-bottom: 15px;
-}
-.project-id {
-  color: #555;
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-.description {
-  color: #666;
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.project-meta {
+.name-and-icon {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  color: #888;
-  font-size: 14px;
+  align-items: center;
+  color: white;
 }
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  margin-right: 10px;
+  user-select: none;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.id {
+  color: #dddddd;
+  margin-left: 5px;
+}
+
+.NoneList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1240px;
+  margin: 0 auto;
+  min-height: 50vh;
+}
+
+.NoneListInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  color: white;
+}
+
+
 
 @media (max-width: 768px) {
+  .container {
+    align-items: center;
+  }
   .menu {
     flex-direction: column;
     gap: 10px;
   }
-  .project-card {
-    padding: 30px;
-  }
+
   .project-card h1 {
     font-size: 26px;
   }
-  .project-id, .description {
-    font-size: 15px;
-  }
-  .project-meta {
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
+
 }
 </style>

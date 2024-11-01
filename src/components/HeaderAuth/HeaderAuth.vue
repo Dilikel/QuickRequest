@@ -47,6 +47,7 @@ const emits = defineEmits(['openMenu']);
   background: #121212;
   padding-top: 20px;
   padding-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .container {
