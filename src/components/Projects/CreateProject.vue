@@ -32,7 +32,6 @@ const createProject = async () => {
       router.go();
     }
   } catch (err) {
-    // Handle error
     console.error("Error creating project:", err);
     alert("Ошибка при создании проекта: " + (err.response?.data?.message || 'Попробуйте снова.'));
   }
@@ -93,6 +92,14 @@ watch(projectName, (newValue) => {
   text-align: center;
   color: white;
   transition: transform 0.3s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-title {

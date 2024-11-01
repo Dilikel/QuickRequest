@@ -2,6 +2,7 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { onMounted, ref } from "vue";
+import RemoveProject from "@/components/Projects/RemoveProject.vue";
 
 const items_url = `${import.meta.env.VITE_API_URL}/projects/`;
 const token = Cookies.get('token');
@@ -21,6 +22,9 @@ const project = ref({
   updated_at: ""
 });
 
+const isRemoveProjectOpen = ref(false);
+const projectIdToRemove = ref(null);
+
 const fetchProject = async () => {
   try {
     const response = await axios.get(`${items_url}${props.id}`, {
@@ -34,12 +38,26 @@ const fetchProject = async () => {
   }
 };
 
+const openRemoveProject = (id) => {
+  projectIdToRemove.value = id;
+  isRemoveProjectOpen.value = true;
+};
+
+const closeRemoveProject = () => {
+  isRemoveProjectOpen.value = false;
+};
+
 onMounted(() => {
   fetchProject();
 });
 </script>
 
 <template>
+  <RemoveProject
+      v-if="isRemoveProjectOpen"
+      :id="projectIdToRemove"
+      @close="closeRemoveProject"
+  />
   <div class="project">
     <div class="container">
       <div class="menu">
@@ -55,7 +73,7 @@ onMounted(() => {
           <button class="settings-btn">
             <img src="/icons/settings-icon.svg" alt="settings" />
           </button>
-          <button class="delete-btn">
+          <button class="delete-btn" @click="openRemoveProject(project.projectId)">
             <img src="/icons/delete-icon.svg" alt="delete" />
           </button>
         </div>
@@ -73,7 +91,6 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
 <style scoped>
 * {
   margin: 0;
