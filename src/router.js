@@ -41,6 +41,7 @@ const routes = [
         name: 'Project',
         component: Project,
         props: true,
+        meta: { requiresAuth: true }
     },
 ];
 
