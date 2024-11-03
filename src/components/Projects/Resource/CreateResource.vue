@@ -179,6 +179,8 @@ h2 {
 	font-size: 16px;
 	cursor: pointer;
 	transition: background 0.4s ease;
+	width: 100%;
+	margin-top: 15px;
 }
 
 .submit-btn:disabled {

@@ -1,0 +1,154 @@
+<script setup>
+import { defineProps } from 'vue'
+import axios from 'axios'
+import Cookies from 'js-cookie'
+import router from '@/router.js'
+
+const props = defineProps({
+	id: {
+		type: Number,
+		required: true,
+	},
+	resourceId: {
+		type: Number,
+		required: true,
+	},
+})
+
+const emit = defineEmits(['close'])
+
+const remove_url = `${import.meta.env.VITE_API_URL}/projects/remove/${
+	props.id
+}/resource/${props.resourceId}/`
+const token = Cookies.get('token')
+
+const closeModal = () => {
+	emit('close')
+}
+
+const removeResource = async () => {
+	try {
+		const response = await axios.delete(remove_url, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		if (response.status === 200) {
+			alert('Удаление ресурса прошло успешно!')
+			closeModal()
+			await router.go()
+		}
+	} catch (error) {
+		console.error('Ошибка при удалении ресурса:', error)
+	}
+}
+</script>
+
+<template>
+	<div class="remove-resource-overlay" @click="closeModal">
+		<div class="remove-resource-modal" @click.stop>
+			<h3>Вы уверены, что хотите удалить ресурс?</h3>
+			<div class="actions">
+				<button class="remove-btn" @click="removeResource">Да</button>
+				<button class="back-btn" @click="closeModal">Отмена</button>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style scoped>
+.remove-resource-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.6); /* Dark overlay */
+	backdrop-filter: blur(8px); /* Optional blur effect */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000; /* Ensures it is on top */
+	animation: fadeIn 0.3s ease; /* Fade-in animation */
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.remove-resource-modal {
+	background-color: #121212; /* Modal background color */
+	padding: 40px;
+	border-radius: 20px;
+	box-shadow: 0 15px 35px rgba(25, 25, 25, 0.6);
+	width: 90%;
+	max-width: 450px;
+	text-align: center;
+	color: white;
+	transition: transform 0.3s ease;
+}
+
+.actions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.remove-btn,
+.back-btn {
+	background-color: #ff4d4d; /* Delete button color */
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: background-color 0.3s ease;
+}
+
+.remove-btn:hover {
+	background-color: #e04343; /* Hover color */
+}
+
+.back-btn {
+	background-color: #555; /* Cancel button color */
+}
+
+.back-btn:hover {
+	background-color: #444; /* Hover color */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+	.remove-resource-modal {
+		padding: 30px;
+	}
+
+	.actions {
+		flex-direction: column;
+		gap: 15px;
+	}
+
+	.remove-btn,
+	.back-btn {
+		font-size: 14px;
+		padding: 8px 16px;
+		border-radius: 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.remove-btn,
+	.back-btn {
+		font-size: 13px;
+		padding: 6px 12px;
+	}
+}
+</style>

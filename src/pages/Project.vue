@@ -5,6 +5,7 @@ import { computed, onMounted, ref } from 'vue'
 import RemoveProject from '@/components/Projects/Project/RemoveProject.vue'
 import ResourceCardList from '@/components/Projects/Resource/ResourceCardList.vue'
 import CreateResource from '@/components/Projects/Resource/CreateResource.vue'
+import RemoveResource from '@/components/Projects/Resource/RemoveResource.vue'
 
 const items_url = `${import.meta.env.VITE_API_URL}/projects/`
 const token = Cookies.get('token')
@@ -23,8 +24,10 @@ const project = ref({
 
 const isRemoveProjectOpen = ref(false)
 const isCreateResourceOpen = ref(false)
+const isRemoveResourceOpen = ref(false)
 const projectIdToRemove = ref(null)
 const projectId = ref(null)
+const resourceIdToRemove = ref(null)
 
 const fetchProject = async () => {
 	try {
@@ -48,13 +51,23 @@ const closeRemoveProject = () => {
 	isRemoveProjectOpen.value = false
 }
 
-const openCreateResource = id => {
+const openCreateResource = () => {
 	projectId.value = props.id
 	isCreateResourceOpen.value = true
 }
 
 const closeCreateResource = () => {
 	isCreateResourceOpen.value = false
+}
+
+const openRemoveResource = resourceId => {
+	projectId.value = props.id
+	resourceIdToRemove.value = resourceId
+	isRemoveResourceOpen.value = true
+}
+
+const closeRemoveResource = () => {
+	isRemoveResourceOpen.value = false
 }
 
 const iconColor = computed(() => {
@@ -109,6 +122,12 @@ onMounted(() => {
 		:id="projectIdToRemove"
 		@close="closeRemoveProject"
 	/>
+	<RemoveResource
+		v-if="isRemoveResourceOpen"
+		:id="projectId"
+		:resourceId="resourceIdToRemove"
+		@close="closeRemoveResource"
+	/>
 	<div class="project">
 		<div class="container">
 			<div class="menu">
@@ -144,7 +163,11 @@ onMounted(() => {
 				</div>
 			</div>
 			<div class="resource-list" v-if="list">
-				<ResourceCardList :items="items" />
+				<ResourceCardList
+					:items="items"
+					@remove-resource="openRemoveResource"
+					:projectId="project.projectId"
+				/>
 			</div>
 			<div class="NoneList" v-else>
 				<div class="NoneListInfo">

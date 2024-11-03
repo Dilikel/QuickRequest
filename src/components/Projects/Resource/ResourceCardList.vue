@@ -1,9 +1,12 @@
 <script setup>
 import ResourceCard from '@/components/Projects/Resource/ResourceCard.vue'
 
-defineProps({
+const props = defineProps({
 	items: Array,
+	projectId: String,
 })
+
+const emit = defineEmits(['remove-resource'])
 </script>
 
 <template>
@@ -13,6 +16,8 @@ defineProps({
 			:key="item.resourceId"
 			:name="item.name"
 			:resource-id="item.resourceId"
+			:projectId="props.projectId"
+			@remove-resource="$emit('remove-resource', $event)"
 		/>
 	</div>
 </template>
