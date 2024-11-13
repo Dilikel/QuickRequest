@@ -48,14 +48,16 @@ const createResource = async () => {
 			console.error('Error creating resource:', response.data)
 		}
 	} catch (err) {
-    alert('Ошибка при создании ресурса, проверьте массив с данными или имя ресурса')
+		alert(
+			'Ошибка при создании ресурса, проверьте массив с данными или имя ресурса'
+		)
 		console.error('Error creating resource:', err)
 	}
 }
 </script>
 
 <template>
-	<div class="create-resource" @click.self="closeModal">
+	<div class="create-resource">
 		<div class="modal-content">
 			<button class="close-btn" @click="closeModal">×</button>
 			<h2>Создать новый ресурс</h2>

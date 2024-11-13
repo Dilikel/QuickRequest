@@ -50,7 +50,7 @@ watch(projectName, newValue => {
 </script>
 
 <template>
-	<div class="overlay" @click="closeModal">
+	<div class="overlay">
 		<div class="modal" @click.stop>
 			<h2 class="modal-title">Создать новый проект</h2>
 			<input
@@ -93,22 +93,22 @@ watch(projectName, newValue => {
 	align-items: center;
 	justify-content: center;
 	z-index: 1000;
-  animation: fadeIn 0.3s ease;
+	animation: fadeIn 0.3s ease;
 }
 
 .modal {
-  background: rgba(0, 0, 0, 0.7);
+	background: rgba(0, 0, 0, 0.7);
 	padding: 40px;
 	border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 	width: 90%;
 	max-width: 450px;
 	text-align: center;
 	color: white;
 	transition: transform 0.3s ease;
-  backdrop-filter: blur(8px);
-  position: relative;
-  animation: slideUp 0.4s ease;
+	backdrop-filter: blur(8px);
+	position: relative;
+	animation: slideUp 0.4s ease;
 }
 @keyframes fadeIn {
 	from {
@@ -134,12 +134,12 @@ watch(projectName, newValue => {
 	border: none;
 	border-radius: 10px;
 	font-size: 16px;
-  background-color: #2a2a2a;
-  color: #ffffff;
+	background-color: #2a2a2a;
+	color: #ffffff;
 	text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  outline: none;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease;
+	outline: none;
 }
 
 .project-input::placeholder {

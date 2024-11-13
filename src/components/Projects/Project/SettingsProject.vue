@@ -67,7 +67,7 @@ onMounted(fetchProject)
 </script>
 
 <template>
-	<div class="settings-project" @click="closeModal">
+	<div class="settings-project">
 		<div class="container" @click.stop>
 			<button class="close-btn" @click="closeModal">×</button>
 			<div class="title">

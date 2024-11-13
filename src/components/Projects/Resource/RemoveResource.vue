@@ -45,7 +45,7 @@ const removeResource = async () => {
 </script>
 
 <template>
-	<div class="remove-resource-overlay" @click="closeModal">
+	<div class="remove-resource-overlay">
 		<div class="remove-resource-modal" @click.stop>
 			<h3>Вы уверены, что хотите удалить ресурс?</h3>
 			<div class="actions">
