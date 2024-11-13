@@ -86,6 +86,7 @@ const openResourceUrl = () => {
 	width: 15px;
 	height: 15px;
 	margin-bottom: 2px;
+  user-select: none;
 }
 
 .name:hover {
@@ -109,6 +110,7 @@ const openResourceUrl = () => {
 	border: none;
 	cursor: pointer;
 	transition: transform 0.3s ease;
+  user-select: none;
 }
 
 .settings-btn:hover,

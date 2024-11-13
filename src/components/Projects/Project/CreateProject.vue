@@ -93,19 +93,22 @@ watch(projectName, newValue => {
 	align-items: center;
 	justify-content: center;
 	z-index: 1000;
+  animation: fadeIn 0.3s ease;
 }
 
 .modal {
-	background-color: #121212;
+  background: rgba(0, 0, 0, 0.7);
 	padding: 40px;
 	border-radius: 20px;
-	box-shadow: 0 15px 35px rgba(25, 25, 25, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 	width: 90%;
 	max-width: 450px;
 	text-align: center;
 	color: white;
 	transition: transform 0.3s ease;
-	animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(8px);
+  position: relative;
+  animation: slideUp 0.4s ease;
 }
 @keyframes fadeIn {
 	from {
@@ -129,13 +132,14 @@ watch(projectName, newValue => {
 	padding: 15px;
 	margin-bottom: 20px;
 	border: none;
-	border-radius: 30px;
+	border-radius: 10px;
 	font-size: 16px;
-	background-color: #2c2c2c;
-	color: white;
+  background-color: #2a2a2a;
+  color: #ffffff;
 	text-align: center;
-	box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.4);
-	transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  outline: none;
 }
 
 .project-input::placeholder {

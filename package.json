@@ -12,11 +12,13 @@
     "@formkit/auto-animate": "^0.8.2",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
+    "monaco-editor": "^0.52.0",
     "vue": "^3.4.29",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vite-plugin-monaco-editor": "^1.1.0"
   }
 }

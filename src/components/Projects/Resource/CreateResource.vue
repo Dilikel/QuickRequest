@@ -48,6 +48,7 @@ const createResource = async () => {
 			console.error('Error creating resource:', response.data)
 		}
 	} catch (err) {
+    alert('Ошибка при создании ресурса, проверьте массив с данными или имя ресурса')
 		console.error('Error creating resource:', err)
 	}
 }

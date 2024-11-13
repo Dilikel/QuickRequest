@@ -6,6 +6,7 @@ import RemoveProject from '@/components/Projects/Project/RemoveProject.vue'
 import ResourceCardList from '@/components/Projects/Resource/ResourceCardList.vue'
 import CreateResource from '@/components/Projects/Resource/CreateResource.vue'
 import RemoveResource from '@/components/Projects/Resource/RemoveResource.vue'
+import SettingsProject from '@/components/Projects/Project/SettingsProject.vue'
 
 const items_url = `${import.meta.env.VITE_API_URL}/projects/`
 const token = Cookies.get('token')
@@ -25,6 +26,7 @@ const project = ref({
 const isRemoveProjectOpen = ref(false)
 const isCreateResourceOpen = ref(false)
 const isRemoveResourceOpen = ref(false)
+const isSettingsProjectOpen = ref(false)
 const projectIdToRemove = ref(null)
 const projectId = ref(null)
 const resourceIdToRemove = ref(null)
@@ -70,6 +72,15 @@ const closeRemoveResource = () => {
 	isRemoveResourceOpen.value = false
 }
 
+const openSettingsProject = () => {
+	projectId.value = props.id
+	isSettingsProjectOpen.value = true
+}
+
+const closeSettingsProject = () => {
+	isSettingsProjectOpen.value = false
+}
+
 const iconColor = computed(() => {
 	const firstLetter = project.value.name
 		? project.value.name.charAt(0).toUpperCase()
@@ -112,6 +123,11 @@ onMounted(() => {
 </script>
 
 <template>
+	<SettingsProject
+		v-if="isSettingsProjectOpen"
+		:projectId="projectId"
+		@close="closeSettingsProject"
+	/>
 	<CreateResource
 		v-if="isCreateResourceOpen"
 		:id="projectId"
@@ -140,7 +156,7 @@ onMounted(() => {
 						<img src="/icons/plus-icon.svg" alt="plus" />
 						Создать ресурс
 					</button>
-					<button class="settings-btn">
+					<button class="settings-btn" @click="openSettingsProject">
 						<img src="/icons/settings-icon.svg" alt="settings" />
 					</button>
 					<button
@@ -330,6 +346,16 @@ onMounted(() => {
 @media (max-width: 768px) {
 	.container {
 		align-items: center;
+	}
+	.create-resource-btn {
+		width: 100%;
+		padding: 10px;
+		font-size: 14px;
+		font-size: 13px;
+	}
+	.panel img {
+		width: 25px;
+		height: 25px;
 	}
 	.menu {
 		flex-direction: column;
