@@ -148,7 +148,6 @@ const removeProject = async () => {
 	}
 
 	.actions {
-		flex-direction: column;
 		gap: 15px;
 	}
 

@@ -63,13 +63,13 @@ const removeResource = async () => {
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	background: rgba(0, 0, 0, 0.6); /* Dark overlay */
-	backdrop-filter: blur(8px); /* Optional blur effect */
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(8px);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 1000; /* Ensures it is on top */
-	animation: fadeIn 0.3s ease; /* Fade-in animation */
+	z-index: 1000;
+	animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
@@ -82,7 +82,7 @@ const removeResource = async () => {
 }
 
 .remove-resource-modal {
-	background-color: #121212; /* Modal background color */
+	background-color: #121212;
 	padding: 40px;
 	border-radius: 20px;
 	box-shadow: 0 15px 35px rgba(25, 25, 25, 0.6);
@@ -103,7 +103,7 @@ const removeResource = async () => {
 
 .remove-btn,
 .back-btn {
-	background-color: #ff4d4d; /* Delete button color */
+	background-color: #ff4d4d;
 	border: none;
 	color: white;
 	padding: 10px 20px;
@@ -114,25 +114,24 @@ const removeResource = async () => {
 }
 
 .remove-btn:hover {
-	background-color: #e04343; /* Hover color */
+	background-color: #e04343;
 }
 
 .back-btn {
-	background-color: #555; /* Cancel button color */
+	background-color: #555;
 }
 
 .back-btn:hover {
-	background-color: #444; /* Hover color */
+	background-color: #444;
 }
 
-/* Responsive styles */
+
 @media (max-width: 768px) {
 	.remove-resource-modal {
 		padding: 30px;
 	}
 
 	.actions {
-		flex-direction: column;
 		gap: 15px;
 	}
 
