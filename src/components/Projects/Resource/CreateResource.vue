@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed, onMounted} from 'vue';
+import {ref, computed, onMounted, watch} from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -19,10 +19,7 @@ const closeModal = () => {
 };
 
 const resourceName = ref('');
-const isGeneratorOpen = ref(true)
-const isInputOpen = ref(false)
-const GeneratorColor = ref('fff')
-const InputColor = ref('fff')
+const mode = ref('generator')
 const jsonData = ref('')
 const objects = ref([
   { id: 1, name: '', additionalParams: {} },
@@ -56,13 +53,13 @@ const removeAdditionalParam = (index, key) => {
 };
 
 const isFormValid = computed(() => {
-  if (isGeneratorOpen.value === true) {
+  if (mode.value === 'generator') {
     return (
         resourceName.value.trim() !== '' &&
         objects.value.every((obj) => obj.name.trim() !== '')
     );
   }
-  if (isInputOpen.value === true) {
+  if (mode.value === 'input') {
     return resourceName.value.trim() !== '' && jsonData.value.trim() !== ''
   }
 });
@@ -70,7 +67,7 @@ const isFormValid = computed(() => {
 const createResource = async () => {
   try {
     let data = ''
-    if (isGeneratorOpen.value === true) {
+    if (mode.value === 'generator') {
       data = {
         projectId: props.id,
         name: resourceName.value.trim(),
@@ -83,8 +80,15 @@ const createResource = async () => {
         }),
       };
     }
-    if (isInputOpen.value === true) {
-      const parsedBody = JSON.parse(jsonData.value.trim())
+    if (mode.value === 'input') {
+      let parsedBody;
+      try {
+        parsedBody = JSON.parse(jsonData.value.trim());
+      } catch (error) {
+        alert('Ошибка в формате JSON. Пожалуйста, проверьте данные.');
+        return;
+      }
+
       data = {
         projectId: props.id,
         name: resourceName.value.trim(),
@@ -110,29 +114,22 @@ const createResource = async () => {
 };
 
 const openGenerator = () => {
-  isInputOpen.value = false
-  isGeneratorOpen.value = true
+  mode.value = 'generator'
 }
 
 const openInput = () => {
-  isGeneratorOpen.value = false
-  isInputOpen.value = true
+  mode.value = 'input'
 }
 
-const Color = () => {
-  if (isGeneratorOpen.value === true) {
-    GeneratorColor.value = '#ff6b6b'
-    InputColor.value = 'fff'
-  }
-  if (isInputOpen.value === true) {
-    InputColor.value = '#ff6b6b'
-    GeneratorColor.value = 'fff'
-  }
-}
+const generatorButtonStyle = computed(() => ({
+  borderColor: mode.value === 'generator' ? '#ff6b6b' : '#fff',
+  color: mode.value === 'generator' ? '#ff6b6b' : '#fff',
+}));
 
-onMounted(async () => {
-  await Color()
-})
+const inputButtonStyle = computed(() => ({
+  borderColor: mode.value === 'input' ? '#ff6b6b' : '#fff',
+  color: mode.value === 'input' ? '#ff6b6b' : '#fff',
+}));
 </script>
 
 <template>
@@ -150,16 +147,16 @@ onMounted(async () => {
         <div class="header-action">
           <h3>Выберете способ создания JSON для вашего ресурса</h3>
           <div class="header-buttons">
-            <div class="generator-btn" @click="openGenerator" :style="{ borderColor: GeneratorColor, color: GeneratorColor}">
+            <div class="generator-btn" @click="openGenerator" :style="generatorButtonStyle">
               Генератор
             </div>
-            <div class="input-btn" @click="openInput" :style="{ borderColor: InputColor, color: InputColor}">
+            <div class="input-btn" @click="openInput" :style="inputButtonStyle">
               Ввести самостоятельно JSON
             </div>
           </div>
         </div>
       </div>
-      <div class="form-group" v-if="isGeneratorOpen">
+      <div class="form-group" v-if="mode === 'generator'">
         <div class="objects-list">
           <div
               class="object-item"
@@ -204,7 +201,7 @@ onMounted(async () => {
         </div>
         <button class="add-btn large" @click="addObject">Добавить объект</button>
       </div>
-      <div class="input-form" v-if="isInputOpen">
+      <div class="input-form" v-if="mode === 'input'">
         <textarea
             class="input-field json-input"
             placeholder='Введите массив объектов в формате JSON, например: [{"id": 1, "name": "Object One"}, {"id": 2, "name": "Object Two"}]'
@@ -236,8 +233,9 @@ onMounted(async () => {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
@@ -254,9 +252,12 @@ onMounted(async () => {
   padding: 30px;
   width: 90%;
   max-width: 550px;
+  height: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   position: relative;
   animation: slideUp 0.4s ease;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .create-header {
@@ -307,6 +308,11 @@ onMounted(async () => {
   border: 1px solid #ff6b6b;
   color: #ff6b6b;
   box-shadow: 0 4px 12px rgba(255, 104, 104, 0.3);
+}
+
+.generator-btn:focus, .input-btn:focus {
+  outline: 2px solid #ff6b6b;
+  outline-offset: 2px;
 }
 
 
