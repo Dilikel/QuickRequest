@@ -4,7 +4,7 @@ import CreateProject from '@/components/Projects/Project/CreateProject.vue'
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import Cookies from 'js-cookie'
-import router from "@/router.js";
+import router from '@/router.js'
 
 const items = ref([])
 const list = ref(true)
@@ -31,15 +31,14 @@ const toggleCreateProjectModal = () => {
 }
 
 const isUserAuthenticated = () => {
-  if (!token) {
-    router.push({name: 'Home'});
-  }
-
+	if (!token) {
+		router.push({ name: 'Home' })
+	}
 }
 
 onMounted(() => {
 	fetchItems()
-  isUserAuthenticated()
+	isUserAuthenticated()
 })
 </script>
 

@@ -5,6 +5,7 @@ import Register from '@/pages/Auth/Register.vue'
 import Profile from '@/pages/User/Profile.vue'
 import Projects from '@/pages/Projects.vue'
 import Project from '@/pages/Project.vue'
+import PrivacyPolicy from './pages/PrivacyPolicy.vue'
 import Cookies from 'js-cookie'
 
 const routes = [
@@ -42,6 +43,11 @@ const routes = [
 		component: Project,
 		props: true,
 		meta: { requiresAuth: true },
+	},
+	{
+		path: '/privacy-policy',
+		name: 'PrivacyPolicy',
+		component: PrivacyPolicy,
 	},
 ]
 

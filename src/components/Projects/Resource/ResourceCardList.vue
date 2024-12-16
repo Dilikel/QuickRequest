@@ -6,7 +6,7 @@ const props = defineProps({
 	projectId: String,
 })
 
-const emit = defineEmits(['remove-resource'])
+const emit = defineEmits(['remove-resource'], ['settings-resource'])
 </script>
 
 <template>
@@ -18,6 +18,7 @@ const emit = defineEmits(['remove-resource'])
 			:resource-id="item.resourceId"
 			:projectId="props.projectId"
 			@remove-resource="$emit('remove-resource', $event)"
+			@settings-resource="$emit('settings-resource', $event)"
 		/>
 	</div>
 </template>

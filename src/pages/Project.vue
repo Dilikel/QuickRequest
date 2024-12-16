@@ -7,6 +7,7 @@ import ResourceCardList from '@/components/Projects/Resource/ResourceCardList.vu
 import CreateResource from '@/components/Projects/Resource/CreateResource.vue'
 import RemoveResource from '@/components/Projects/Resource/RemoveResource.vue'
 import SettingsProject from '@/components/Projects/Project/SettingsProject.vue'
+import SettingsResource from '@/components/Projects/Resource/SettingsResource.vue'
 
 const items_url = `${import.meta.env.VITE_API_URL}/projects/`
 const token = Cookies.get('token')
@@ -27,6 +28,7 @@ const isRemoveProjectOpen = ref(false)
 const isCreateResourceOpen = ref(false)
 const isRemoveResourceOpen = ref(false)
 const isSettingsProjectOpen = ref(false)
+const isResourceProjectOpen = ref(false)
 const projectIdToRemove = ref(null)
 const projectId = ref(null)
 const resourceIdToRemove = ref(null)
@@ -42,7 +44,7 @@ const fetchProject = async () => {
 		project.value = response.data
 	} catch (err) {
 		console.log(err)
-    isNotFound.value = true
+		isNotFound.value = true
 	}
 }
 
@@ -81,6 +83,16 @@ const openSettingsProject = () => {
 
 const closeSettingsProject = () => {
 	isSettingsProjectOpen.value = false
+}
+
+const openSettingsResource = resourceId => {
+	projectId.value = props.id
+	resourceIdToRemove.value = resourceId
+	isResourceProjectOpen.value = true
+}
+
+const closeSettingsResource = () => {
+	isResourceProjectOpen.value = false
 }
 
 const iconColor = computed(() => {
@@ -125,89 +137,96 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="main" v-if="!isNotFound">
-    <SettingsProject
-        v-if="isSettingsProjectOpen"
-        :projectId="projectId"
-        @close="closeSettingsProject"
-    />
-    <CreateResource
-        v-if="isCreateResourceOpen"
-        :id="projectId"
-        @close="closeCreateResource"
-    />
-    <RemoveProject
-        v-if="isRemoveProjectOpen"
-        :id="projectIdToRemove"
-        @close="closeRemoveProject"
-    />
-    <RemoveResource
-        v-if="isRemoveResourceOpen"
-        :id="projectId"
-        :resourceId="resourceIdToRemove"
-        @close="closeRemoveResource"
-    />
-    <div class="project">
-      <div class="container">
-        <div class="menu">
-          <router-link to="/projects" class="back-btn">
-            <img src="/icons/arrow-icon.svg" alt="arrow" />
-            Назад
-          </router-link>
-          <div class="panel">
-            <button class="create-resource-btn" @click="openCreateResource">
-              <img src="/icons/plus-icon.svg" alt="plus" />
-              Создать ресурс
-            </button>
-            <button class="settings-btn" @click="openSettingsProject">
-              <img src="/icons/settings-icon.svg" alt="settings" />
-            </button>
-            <button
-                class="delete-btn"
-                @click="openRemoveProject(project.projectId)"
-            >
-              <img src="/icons/delete-icon.svg" alt="delete" />
-            </button>
-          </div>
-        </div>
-        <div class="info">
-          <div class="name-and-icon">
-            <div class="icon" :style="{ backgroundColor: iconColor }">
-              <span>{{ firstLetter }}</span>
-            </div>
-            <h1>{{ project.name }}</h1>
-          </div>
-          <div class="id">
-            <p>ID: {{ project.projectId }}</p>
-          </div>
-        </div>
-        <div class="resource-list" v-if="list">
-          <ResourceCardList
-              :items="items"
-              @remove-resource="openRemoveResource"
-              :projectId="project.projectId"
-          />
-        </div>
-        <div class="NoneList" v-else>
-          <div class="NoneListInfo">
-            <img src="/public/icons/package-icon.svg" alt="package" />
-            <h1>Список ресурсов пока пуст</h1>
-            <p>У вас пока нет ресурсов. Создайте новый ресурс</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="main" v-if="!isNotFound">
+		<SettingsResource
+			v-if="isResourceProjectOpen"
+			:id="projectId"
+			:resourceId="resourceIdToRemove"
+			@close="closeSettingsResource"
+		/>
+		<SettingsProject
+			v-if="isSettingsProjectOpen"
+			:projectId="projectId"
+			@close="closeSettingsProject"
+		/>
+		<CreateResource
+			v-if="isCreateResourceOpen"
+			:id="projectId"
+			@close="closeCreateResource"
+		/>
+		<RemoveProject
+			v-if="isRemoveProjectOpen"
+			:id="projectIdToRemove"
+			@close="closeRemoveProject"
+		/>
+		<RemoveResource
+			v-if="isRemoveResourceOpen"
+			:id="projectId"
+			:resourceId="resourceIdToRemove"
+			@close="closeRemoveResource"
+		/>
+		<div class="project">
+			<div class="container">
+				<div class="menu">
+					<router-link to="/projects" class="back-btn">
+						<img src="/icons/arrow-icon.svg" alt="arrow" />
+						Назад
+					</router-link>
+					<div class="panel">
+						<button class="create-resource-btn" @click="openCreateResource">
+							<img src="/icons/plus-icon.svg" alt="plus" />
+							Создать ресурс
+						</button>
+						<button class="settings-btn" @click="openSettingsProject">
+							<img src="/icons/settings-icon.svg" alt="settings" />
+						</button>
+						<button
+							class="delete-btn"
+							@click="openRemoveProject(project.projectId)"
+						>
+							<img src="/icons/delete-icon.svg" alt="delete" />
+						</button>
+					</div>
+				</div>
+				<div class="info">
+					<div class="name-and-icon">
+						<div class="icon" :style="{ backgroundColor: iconColor }">
+							<span>{{ firstLetter }}</span>
+						</div>
+						<h1>{{ project.name }}</h1>
+					</div>
+					<div class="id">
+						<p>ID: {{ project.projectId }}</p>
+					</div>
+				</div>
+				<div class="resource-list" v-if="list">
+					<ResourceCardList
+						:items="items"
+						@remove-resource="openRemoveResource"
+						@settings-resource="openSettingsResource"
+						:projectId="project.projectId"
+					/>
+				</div>
+				<div class="NoneList" v-else>
+					<div class="NoneListInfo">
+						<img src="/public/icons/package-icon.svg" alt="package" />
+						<h1>Список ресурсов пока пуст</h1>
+						<p>У вас пока нет ресурсов. Создайте новый ресурс</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-  <div class="not-found" v-else>
-    <div class="not-found-container">
-      <h1>404</h1>
-      <div class="not-found-text">
-        <p>Извините, ваш проект не был найден.</p>
-        <p>Пожалуйста проверьте правильность ссылки.</p>
-      </div>
-    </div>
-  </div>
+	<div class="not-found" v-else>
+		<div class="not-found-container">
+			<h1>404</h1>
+			<div class="not-found-text">
+				<p>Извините, ваш проект не был найден.</p>
+				<p>Пожалуйста проверьте правильность ссылки.</p>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped>
@@ -227,28 +246,28 @@ onMounted(async () => {
 }
 
 .not-found-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 65vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 65vh;
 }
 
 .not-found-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: #e0e0e0;
-  font-size: 18px;
-  font-weight: 500;
-  gap: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	color: #e0e0e0;
+	font-size: 18px;
+	font-weight: 500;
+	gap: 3px;
 }
 
 .not-found-container h1 {
-  color: white;
-  font-weight: 600;
-  font-size: 74px;
+	color: white;
+	font-weight: 600;
+	font-size: 74px;
 }
 
 .resource-list {
@@ -383,12 +402,12 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
-  .not-found-container {
-    width: 100%;
-  }
-  .not-found-text {
-    font-size: 16px;
-  }
+	.not-found-container {
+		width: 100%;
+	}
+	.not-found-text {
+		font-size: 16px;
+	}
 	.container {
 		align-items: center;
 	}

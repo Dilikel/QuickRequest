@@ -60,7 +60,12 @@ const isFormValid = computed(() => {
     );
   }
   if (mode.value === 'input') {
-    return resourceName.value.trim() !== '' && jsonData.value.trim() !== ''
+    try {
+      JSON.parse(jsonData.value);
+      return resourceName.value.trim() !== '';
+    } catch {
+      return false;
+    }
   }
 });
 
@@ -113,13 +118,9 @@ const createResource = async () => {
   }
 };
 
-const openGenerator = () => {
-  mode.value = 'generator'
-}
-
-const openInput = () => {
-  mode.value = 'input'
-}
+const setMode = (newMode) => {
+  mode.value = newMode;
+};
 
 const generatorButtonStyle = computed(() => ({
   borderColor: mode.value === 'generator' ? '#ff6b6b' : '#fff',
@@ -147,10 +148,10 @@ const inputButtonStyle = computed(() => ({
         <div class="header-action">
           <h3>Выберете способ создания JSON для вашего ресурса</h3>
           <div class="header-buttons">
-            <div class="generator-btn" @click="openGenerator" :style="generatorButtonStyle">
+            <div class="generator-btn" @click="setMode('generator')" :style="generatorButtonStyle">
               Генератор
             </div>
-            <div class="input-btn" @click="openInput" :style="inputButtonStyle">
+            <div class="input-btn" @click="setMode('input')" :style="inputButtonStyle">
               Ввести самостоятельно JSON
             </div>
           </div>

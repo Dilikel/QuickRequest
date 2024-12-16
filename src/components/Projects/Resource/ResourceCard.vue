@@ -24,6 +24,10 @@ const handleRemove = () => {
 	emit('remove-resource', props.resourceId)
 }
 
+const handleSettings = () => {
+  emit('settings-resource', props.resourceId)
+}
+
 const openResourceUrl = () => {
 	window.open(resource_url, '_blank')
 }
@@ -39,7 +43,7 @@ const openResourceUrl = () => {
 			<div class="id">ID: {{ props.resourceId }}</div>
 		</div>
 		<div class="actions">
-			<button class="settings-btn" aria-label="Settings">
+			<button class="settings-btn" aria-label="Settings" @click="handleSettings">
 				<img src="/icons/settings-icon.svg" alt="settings" />
 			</button>
 			<button class="delete-btn" aria-label="Delete" @click="handleRemove">
