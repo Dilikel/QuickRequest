@@ -48,17 +48,17 @@
 				<p>
 					Если у вас есть вопросы или комментарии по поводу нашей политики
 					конфиденциальности, пожалуйста, свяжитесь с нами по электронной почте:
-					<a href="quick-request-official@yandex.ru"
-						>quick-request-official@yandex.ru</a
+					<a href="mailto:quick-request-official@yandex.ru">
+						quick-request-official@yandex.ru </a
 					>.
 				</p>
 			</section>
 		</main>
 
 		<footer class="footer">
-			<router-link to="/" class="primary-button"
-				>Вернуться на главную</router-link
-			>
+			<router-link to="/" class="primary-button">
+				Вернуться на главную
+			</router-link>
 		</footer>
 	</div>
 </template>
@@ -122,5 +122,53 @@ a {
 	background: linear-gradient(90deg, #ff7a00, #ff5656);
 	transform: translateY(-4px);
 	box-shadow: 0 10px 25px rgba(255, 107, 107, 0.7);
+}
+
+@media screen and (max-width: 768px) {
+	.privacy-policy {
+		padding: 15px;
+		width: 100%;
+	}
+
+	h1 {
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-size: 1.5rem;
+	}
+
+	p {
+		font-size: 0.9rem;
+	}
+
+	.primary-button {
+		padding: 10px 20px;
+		font-size: 14px;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.privacy-policy {
+		padding: 10px;
+		width: 100%;
+	}
+
+	h1 {
+		font-size: 1.75rem;
+	}
+
+	h2 {
+		font-size: 1.25rem;
+	}
+
+	p {
+		font-size: 0.85rem;
+	}
+
+	.primary-button {
+		padding: 8px 15px;
+		font-size: 12px;
+	}
 }
 </style>
