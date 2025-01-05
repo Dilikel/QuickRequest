@@ -36,7 +36,7 @@ const removeResource = async () => {
 		if (response.status === 200) {
 			alert('Удаление ресурса прошло успешно!')
 			closeModal()
-			await router.go()
+			router.go()
 		}
 	} catch (error) {
 		console.error('Ошибка при удалении ресурса:', error)
@@ -124,7 +124,6 @@ const removeResource = async () => {
 .back-btn:hover {
 	background-color: #444;
 }
-
 
 @media (max-width: 768px) {
 	.remove-resource-modal {

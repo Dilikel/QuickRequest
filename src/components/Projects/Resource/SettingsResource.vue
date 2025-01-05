@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import router from '@/router.js'
 
 const props = defineProps({
 	id: {
@@ -18,6 +19,7 @@ const emit = defineEmits(['close'])
 const resource_url = `${import.meta.env.VITE_API_URL}/projects/${
 	props.id
 }/resource/${props.resourceId}`
+const save_url = `${import.meta.env.VITE_API_URL}/projects/change/resource`
 const token = Cookies.get('token')
 
 const closeModal = () => {
@@ -30,7 +32,7 @@ const resource = ref({
 	body: [],
 })
 
-const body = ref('');
+const body = ref('')
 
 const fetchResource = async () => {
 	try {
@@ -40,7 +42,34 @@ const fetchResource = async () => {
 			},
 		})
 		resource.value = response.data
-    body.value = JSON.stringify(response.data.body, null, 2);
+		body.value = JSON.stringify(response.data.body, null, 2)
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+const saveResource = async () => {
+	try {
+		const response = await axios.patch(
+			save_url,
+			{
+				projectId: props.id,
+				resourceId: props.resourceId,
+				resourceName: resource.value.name,
+				body: JSON.parse(body.value),
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
+		console.log(response.data)
+		if (response.status === 200) {
+			alert('Изменения сохранены!')
+			closeModal()
+			router.go()
+		}
 	} catch (err) {
 		console.log(err)
 	}
@@ -72,7 +101,9 @@ onMounted(async () => {
 					required
 				></textarea>
 			</div>
-			<button type="submit" class="submit-btn">Сохранить ресурс</button>
+			<button type="submit" class="submit-btn" @click="saveResource">
+				Сохранить ресурс
+			</button>
 		</div>
 	</div>
 </template>
@@ -198,8 +229,6 @@ h3 {
 	text-align: center;
 }
 
-
-
 .input-field {
 	padding: 14px;
 	border: none;
@@ -223,7 +252,6 @@ h3 {
 	min-height: 300px;
 	resize: vertical;
 }
-
 
 .submit-btn {
 	background: linear-gradient(90deg, #ff8a00, #ff6b6b);
