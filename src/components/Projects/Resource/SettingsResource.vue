@@ -30,6 +30,8 @@ const resource = ref({
 	body: [],
 })
 
+const body = ref('');
+
 const fetchResource = async () => {
 	try {
 		const response = await axios.get(resource_url, {
@@ -38,6 +40,7 @@ const fetchResource = async () => {
 			},
 		})
 		resource.value = response.data
+    body.value = JSON.stringify(response.data.body, null, 2);
 	} catch (err) {
 		console.log(err)
 	}
@@ -64,8 +67,8 @@ onMounted(async () => {
 			<div class="input-form">
 				<textarea
 					class="input-field json-input"
-					:placeholder="resource.body"
-					v-model="resource.body"
+					:placeholder="body"
+					v-model="body"
 					required
 				></textarea>
 			</div>
@@ -195,11 +198,7 @@ h3 {
 	text-align: center;
 }
 
-.form-group {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-}
+
 
 .input-field {
 	padding: 14px;
@@ -221,63 +220,10 @@ h3 {
 }
 
 .json-input {
-	min-height: 140px;
+	min-height: 300px;
 	resize: vertical;
 }
 
-.objects-list {
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-}
-
-.object-item {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	background: #333;
-	padding: 20px;
-	border-radius: 10px;
-}
-
-.object-id {
-	color: white;
-}
-
-.object-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.object-name {
-	width: 70%;
-}
-
-.delete-btn {
-	background: #ff4d4d;
-	border: none;
-	color: white;
-	font-size: 20px;
-	border-radius: 50%;
-	cursor: pointer;
-	padding: 5px 10px;
-}
-
-.add-btn {
-	background: #5cb85c;
-	color: white;
-	border: none;
-	padding: 12px;
-	border-radius: 8px;
-	cursor: pointer;
-	font-size: 16px;
-	transition: background 0.3s ease;
-}
-
-.add-btn:hover {
-	background: #4cae4c;
-}
 
 .submit-btn {
 	background: linear-gradient(90deg, #ff8a00, #ff6b6b);
