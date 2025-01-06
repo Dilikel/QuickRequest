@@ -1,8 +1,5 @@
 <script setup>
-import Header from '@/components/Header/Header.vue'
-import HeaderMobileMenu from '@/components/Header/HeaderMobileMenu.vue'
-import HeaderAuth from '@/components/HeaderAuth/HeaderAuth.vue'
-import HeaderMobileMenuAuth from '@/components/HeaderAuth/HeaderMobileMenuAuth.vue'
+import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 import Loader from '@/components/Loader.vue'
 import { ref, onMounted } from 'vue'
@@ -11,7 +8,6 @@ import Cookies from 'js-cookie'
 import router from '@/router'
 
 const isAuthenticated = ref(false)
-const userName = ref('')
 const token = Cookies.get('token')
 const auth_url = `${import.meta.env.VITE_API_URL}/me`
 const isLoaderVisible = ref(true)
@@ -26,8 +22,6 @@ const authenticateUser = async () => {
 			},
 		})
 		isAuthenticated.value = true
-		userName.value = data.name
-
 		if (data.token) {
 			Cookies.set('token', data.token, { expires: 31 })
 			router.push('/projects')
@@ -38,14 +32,6 @@ const authenticateUser = async () => {
 		Cookies.remove('loginSuccess')
 		isAuthenticated.value = false
 	}
-}
-
-const isMenuOpen = ref(false)
-const closeMenu = () => {
-	isMenuOpen.value = false
-}
-const openMenu = () => {
-	isMenuOpen.value = true
 }
 
 onMounted(async () => {
@@ -66,18 +52,7 @@ onMounted(async () => {
 <template>
 	<Loader v-if="isLoaderVisible" />
 	<div v-else>
-		<Header v-if="!isAuthenticated" @openMenu="openMenu" />
-		<HeaderMobileMenu
-			v-if="!isAuthenticated"
-			:isOpen="isMenuOpen"
-			@closeMenu="closeMenu"
-		/>
-		<HeaderAuth v-if="isAuthenticated" @openMenu="openMenu" :name="userName" />
-		<HeaderMobileMenuAuth
-			v-if="isAuthenticated"
-			:isOpen="isMenuOpen"
-			@closeMenu="closeMenu"
-		/>
+		<Header />
 		<router-view />
 		<Footer />
 	</div>
