@@ -1,19 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
 const isAuthenticated = ref(false)
 const userName = ref('')
 const token = Cookies.get('token')
-const auth_url = `${import.meta.env.VITE_API_URL}/me`
 const isMenuOpen = ref(false)
 
 const authenticateUser = async () => {
 	if (!token) return
 
 	try {
-		const { data } = await axios.get(auth_url, {
+		const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/me`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -33,16 +32,7 @@ const authenticateUser = async () => {
 	}
 }
 
-const closeMenu = () => {
-	isMenuOpen.value = false
-}
-const openMenu = () => {
-	isMenuOpen.value = true
-}
-
-onMounted(async () => {
-	await authenticateUser()
-})
+authenticateUser()
 </script>
 <template>
 	<header class="header">
@@ -67,20 +57,24 @@ onMounted(async () => {
 					<p>{{ userName }}</p>
 				</router-link>
 			</div>
-			<div class="mobile-menu-btn" @click="openMenu">
+			<div class="mobile-menu-btn" @click="isMenuOpen = true">
 				<img src="/icons/menu-icon.svg" alt="menu-icon" />
 			</div>
 		</div>
 	</header>
 
-	<div class="header-mobile-menu" v-if="isMenuOpen" @click="closeMenu"></div>
+	<div
+		class="header-mobile-menu"
+		v-if="isMenuOpen"
+		@click="isMenuOpen = false"
+	></div>
 	<div class="mobile-menu" :class="{ open: isMenuOpen }">
 		<div class="mobile-menu-header">
-			<button class="mobile-close-btn" @click="closeMenu">×</button>
+			<button class="mobile-close-btn" @click="isMenuOpen = false">×</button>
 		</div>
 		<ul class="mobile-menu-list">
 			<li class="mobile-menu-item">
-				<router-link to="/" @click="closeMenu">Главная</router-link>
+				<router-link to="/" @click="isMenuOpen = false">Главная</router-link>
 			</li>
 			<li class="mobile-menu-item">
 				<router-link to="/">Документация</router-link>
@@ -88,12 +82,14 @@ onMounted(async () => {
 			<router-link
 				v-if="!isAuthenticated"
 				to="/login"
-				@click="closeMenu"
+				@click="isMenuOpen = false"
 				class="mobile-menu-item mobile-start-btn"
 				>Войти</router-link
 			>
 			<li class="mobile-menu-item" v-if="isAuthenticated">
-				<router-link to="/profile" @click="closeMenu">Профиль</router-link>
+				<router-link to="/profile" @click="isMenuOpen = false"
+					>Профиль</router-link
+				>
 			</li>
 		</ul>
 	</div>

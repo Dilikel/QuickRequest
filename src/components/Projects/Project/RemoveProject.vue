@@ -13,7 +13,6 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 
-const remove_url = `${import.meta.env.VITE_API_URL}/projects/remove/`
 const token = Cookies.get('token')
 
 const closeModal = () => {
@@ -22,11 +21,14 @@ const closeModal = () => {
 
 const removeProject = async () => {
 	try {
-		const response = await axios.delete(`${remove_url}${props.id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const response = await axios.delete(
+			`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		if (response.status === 200) {
 			alert('Удаление проекта прошло успешно!')
 			closeModal()

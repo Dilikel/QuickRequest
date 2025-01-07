@@ -16,10 +16,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close'])
-const resource_url = `${import.meta.env.VITE_API_URL}/projects/${
-	props.id
-}/resource/${props.resourceId}`
-const save_url = `${import.meta.env.VITE_API_URL}/projects/change/resource`
 const token = Cookies.get('token')
 
 const closeModal = () => {
@@ -36,11 +32,16 @@ const body = ref('')
 
 const fetchResource = async () => {
 	try {
-		const response = await axios.get(resource_url, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_URL}/projects/${props.id}/resource/${
+				props.resourceId
+			}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		resource.value = response.data
 		body.value = JSON.stringify(response.data.body, null, 2)
 	} catch (err) {
@@ -51,7 +52,7 @@ const fetchResource = async () => {
 const saveResource = async () => {
 	try {
 		const response = await axios.patch(
-			save_url,
+			`${import.meta.env.VITE_API_URL}/projects/change/resource`,
 			{
 				projectId: props.id,
 				resourceId: props.resourceId,

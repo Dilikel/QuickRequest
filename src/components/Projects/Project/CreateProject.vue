@@ -8,7 +8,6 @@ import { useRouter } from 'vue-router'
 const projectName = ref('')
 const isCreateButtonDisabled = ref(true)
 const emit = defineEmits(['close'])
-const create_url = `${import.meta.env.VITE_API_URL}/projects/create`
 const token = Cookies.get('token')
 const router = useRouter()
 
@@ -19,7 +18,7 @@ const closeModal = () => {
 const createProject = async () => {
 	try {
 		const response = await axios.post(
-			create_url,
+			`${import.meta.env.VITE_API_URL}/projects/create`,
 			{
 				projectname: projectName.value,
 			},

@@ -10,19 +10,18 @@ const props = defineProps({
 	},
 })
 const emit = defineEmits(['close'])
-const items_url = `${import.meta.env.VITE_API_URL}/projects/`
-const save_url = `${import.meta.env.VITE_API_URL}/projects/${
-	props.projectId
-}/change/name`
 const token = Cookies.get('token')
 
 const fetchProject = async () => {
 	try {
-		const response = await axios.get(`${items_url}${props.projectId}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_URL}/projects/${props.projectId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		project.value = response.data
 	} catch (err) {
 		console.log(err)
@@ -40,7 +39,7 @@ const closeModal = () => {
 const saveProject = async () => {
 	try {
 		const response = await axios.patch(
-			save_url,
+			`${import.meta.env.VITE_API_URL}/projects/${props.projectId}/change/name`,
 			{ newName: project.value.name },
 			{
 				headers: {

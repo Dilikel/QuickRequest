@@ -9,7 +9,6 @@ import RemoveResource from '@/components/Projects/Resource/RemoveResource.vue'
 import SettingsProject from '@/components/Projects/Project/SettingsProject.vue'
 import SettingsResource from '@/components/Projects/Resource/SettingsResource.vue'
 
-const items_url = `${import.meta.env.VITE_API_URL}/projects/`
 const token = Cookies.get('token')
 
 const props = defineProps({
@@ -36,11 +35,14 @@ const isNotFound = ref(false)
 
 const fetchProject = async () => {
 	try {
-		const response = await axios.get(`${items_url}${props.id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_URL}/projects/${props.id}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		project.value = response.data
 	} catch (err) {
 		console.log(err)
@@ -118,11 +120,14 @@ const list = ref(true)
 
 const fetchItems = async () => {
 	try {
-		const response = await axios.get(`${items_url}${props.id}/resource`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_URL}/projects/${props.id}/resource`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		items.value = response.data
 		list.value = items.value.length > 0
 	} catch (error) {

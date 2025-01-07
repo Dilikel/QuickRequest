@@ -16,10 +16,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close'])
-
-const remove_url = `${import.meta.env.VITE_API_URL}/projects/remove/${
-	props.id
-}/resource/${props.resourceId}/`
 const token = Cookies.get('token')
 
 const closeModal = () => {
@@ -28,11 +24,16 @@ const closeModal = () => {
 
 const removeResource = async () => {
 	try {
-		const response = await axios.delete(remove_url, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const response = await axios.delete(
+			`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}/resource/${
+				props.resourceId
+			}/`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		if (response.status === 200) {
 			alert('Удаление ресурса прошло успешно!')
 			closeModal()

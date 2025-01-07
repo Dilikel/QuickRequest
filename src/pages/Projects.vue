@@ -9,16 +9,18 @@ import router from '@/router.js'
 const items = ref([])
 const list = ref(true)
 const showCreateProjectModal = ref(false)
-const items_url = `${import.meta.env.VITE_API_URL}/projects/`
 const token = Cookies.get('token')
 
 const fetchItems = async () => {
 	try {
-		const response = await axios.get(items_url, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_URL}/projects/`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 		items.value = response.data
 		list.value = items.value.length > 0
 	} catch (error) {

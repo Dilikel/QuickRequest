@@ -9,14 +9,13 @@ import router from '@/router'
 
 const isAuthenticated = ref(false)
 const token = Cookies.get('token')
-const auth_url = `${import.meta.env.VITE_API_URL}/me`
 const isLoaderVisible = ref(true)
 
 const authenticateUser = async () => {
 	if (!token) return
 
 	try {
-		const { data } = await axios.get(auth_url, {
+		const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/me`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
