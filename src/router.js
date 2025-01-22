@@ -6,66 +6,64 @@ import Profile from '@/pages/User/Profile.vue'
 import Projects from '@/pages/Projects.vue'
 import Project from '@/pages/Project.vue'
 import PrivacyPolicy from './pages/PrivacyPolicy.vue'
-import Cookies from 'js-cookie'
+import Error from './Error.vue'
+
 
 const routes = [
 	{
 		path: '/',
 		name: 'Home',
 		component: Home,
-		meta: { requiresAuth: false },
+		meta: { layout: 'Default' },
 	},
 	{
 		path: '/login',
 		name: 'Login',
 		component: Login,
+		meta: { layout: 'Default' },
 	},
 	{
 		path: '/register',
 		name: 'Register',
 		component: Register,
+		meta: { layout: 'Default' },
 	},
 	{
 		path: '/profile',
 		name: 'Profile',
 		component: Profile,
-		meta: { requiresAuth: true },
+		meta: { layout: 'Default' },
 	},
 	{
 		path: '/projects',
 		name: 'Projects',
 		component: Projects,
-		meta: { requiresAuth: true },
+		meta: { layout: 'Default' },
 	},
 	{
 		path: '/projects/:id',
 		name: 'Project',
 		component: Project,
 		props: true,
-		meta: { requiresAuth: true },
+		meta: { layout: 'Default' },
 	},
 	{
 		path: '/privacy-policy',
 		name: 'PrivacyPolicy',
 		component: PrivacyPolicy,
+		meta: { layout: 'Default' },
+	},
+	{
+		path: '/:catchAll(.*)',
+		name: 'Error',
+		component: Error,
+		meta: { layout: 'Default' },
 	},
 ]
 
 const router = createRouter({
 	history: createWebHistory(),
 	routes,
-})
-
-router.beforeEach((to, from, next) => {
-	const token = Cookies.get('token')
-	const isAuthenticated = !!token
-	if (isAuthenticated && to.name === 'Home') {
-		next({ name: 'Projects' })
-	} else if (to.meta.requiresAuth && !isAuthenticated) {
-		next({ name: 'Login' })
-	} else {
-		next()
-	}
 })
 
 export default router

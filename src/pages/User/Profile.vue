@@ -1,39 +1,39 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
+import Loader from '@/components/Loader.vue'
 
 const router = useRouter()
 const token = Cookies.get('token')
+const isLoaderVisible = ref(true)
 
 const user = ref({
 	name: '',
 	email: '',
 })
 
-const fetchUserData = async () => {
-	try {
-		const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/me`, {
+async function fetchUserData() {
+	await axios
+		.get(`${import.meta.env.VITE_API_URL}/auth`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		})
-		if (data.new_access_token) {
-			Cookies.set('token', data.new_access_token, { expires: 31 })
-		}
-		user.value = data
-	} catch (error) {
-		console.error('Ошибка авторизации:', error)
-		Cookies.remove('token')
-		Cookies.remove('loginSuccess')
-	}
+		.then(response => {
+			user.value = response.data
+			isLoaderVisible.value = false
+		})
+		.catch(error => {
+			console.error('Ошибка авторизации:', error)
+			Cookies.remove('token')
+		})
 }
 
-const get_out_user = async () => {
+async function get_out_user() {
 	try {
 		Cookies.remove('token')
-		Cookies.remove('loginSuccess')
 		router.push({ name: 'Home' }).then(() => {
 			window.location.reload()
 		})
@@ -50,13 +50,13 @@ const toggleEditMode = () => {
 const saveProfile = () => {
 	toggleEditMode()
 }
-onMounted(async () => {
-	await fetchUserData()
-})
+
+fetchUserData()
 </script>
 
 <template>
-	<div class="profile">
+	<Loader v-if="isLoaderVisible" />
+	<div v-else class="profile">
 		<div class="profile-header">
 			<div class="logo-and-name">
 				<img
@@ -117,6 +117,7 @@ onMounted(async () => {
 	font-family: 'Poppins', sans-serif;
 	position: relative;
 	overflow: hidden;
+	min-height: 60vh;
 }
 
 .profile::before {

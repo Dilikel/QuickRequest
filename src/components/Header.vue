@@ -7,30 +7,37 @@ const isAuthenticated = ref(false)
 const userName = ref('')
 const token = Cookies.get('token')
 const isMenuOpen = ref(false)
+const isLoaderVisible = ref(true)
 
-const authenticateUser = async () => {
-	if (!token) return
+function authenticateUser() {
+	if (!token) {
+		isLoaderVisible.value = false
+		return
+	}
 
-	try {
-		const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/me`, {
+	axios
+		.get(`${import.meta.env.VITE_API_URL}/auth`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		})
-		isAuthenticated.value = true
-		userName.value = data.name
-
-		if (data.token) {
-			Cookies.set('token', data.token, { expires: 31 })
-			router.push('/projects')
-		}
-	} catch (error) {
-		console.error('Ошибка авторизации:', error)
-		Cookies.remove('token')
-		Cookies.remove('loginSuccess')
-		isAuthenticated.value = false
-	}
+		.then(response => {
+			const { data } = response
+			isAuthenticated.value = true
+			userName.value = data.name
+			isLoaderVisible.value = false
+			if (data.new_access_token) {
+				Cookies.set('token', data.new_access_token, { expires: 31 })
+			}
+		})
+		.catch(error => {
+			console.error('Ошибка авторизации:', error)
+			isLoaderVisible.value = false
+			Cookies.remove('token')
+			isAuthenticated.value = false
+		})
 }
+
 
 authenticateUser()
 </script>
@@ -49,13 +56,31 @@ authenticateUser()
 				</ul>
 			</div>
 			<div class="header-action">
-				<router-link v-if="!isAuthenticated" to="/login" class="start_btn"
-					>Начать сейчас</router-link
+				<div v-if="isLoaderVisible" class="loader">
+				<div class="wave"></div>
+			</div>
+			<div class="buttons" v-else>
+				<router-link v-if="!isAuthenticated" to="/login" class="login-button"
+					>ВОЙТИ</router-link
 				>
-				<router-link v-if="isAuthenticated" to="/profile" class="user">
-					<img src="/icons/user-icon.svg" alt="user-icon" />
+				<router-link v-else to="/profile" class="user">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="1.5"
+						stroke="#fff"
+						class="user-icon size-6"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+						/>
+					</svg>
 					<p>{{ userName }}</p>
 				</router-link>
+			</div>
 			</div>
 			<div class="mobile-menu-btn" @click="isMenuOpen = true">
 				<img src="/icons/menu-icon.svg" alt="menu-icon" />
@@ -96,13 +121,6 @@ authenticateUser()
 </template>
 
 <style scoped>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
-}
-
 .header {
 	background: #121212;
 	padding-top: 20px;
@@ -152,7 +170,7 @@ authenticateUser()
 	color: #ff8a00;
 }
 
-.start_btn {
+.login-button {
 	background: linear-gradient(90deg, #ff8a00, #ff6b6b);
 	color: white;
 	padding: 12px 30px;
@@ -166,7 +184,7 @@ authenticateUser()
 	box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
 }
 
-.start_btn:hover {
+.login-button:hover {
 	background: linear-gradient(90deg, #ff7a00, #ff5656);
 	transform: translateY(-4px);
 	box-shadow: 0 10px 25px rgba(255, 107, 107, 0.7);
@@ -181,7 +199,7 @@ authenticateUser()
 	display: none;
 }
 
-.user img {
+.user svg {
 	width: 40px;
 	height: 40px;
 	cursor: pointer;
@@ -208,6 +226,50 @@ authenticateUser()
 
 .user p:hover {
 	color: #ff8a00;
+}
+
+.loader {
+	position: relative;
+	width: 150px;
+	height: 40px;
+	background: linear-gradient(90deg, #212122, #252525);
+	border-radius: 20px;
+	overflow: hidden;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.wave {
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(228, 199, 1, 0.3),
+		transparent
+	);
+	animation: wave-animation 2s infinite;
+	border-radius: 20px;
+}
+
+@keyframes wave-animation {
+	0% {
+		left: -100%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+.buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 @media (max-width: 1024px) {
