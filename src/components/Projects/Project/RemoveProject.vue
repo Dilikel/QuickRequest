@@ -3,6 +3,7 @@ import { defineProps } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import router from '@/router.js'
+import { useToast } from 'vue-toastification'
 
 const props = defineProps({
 	id: {
@@ -12,7 +13,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close'])
-
+const toast = useToast()
 const token = Cookies.get('token')
 
 const closeModal = () => {
@@ -30,13 +31,17 @@ const removeProject = async () => {
 			}
 		)
 		if (response.status === 200) {
-			alert('Удаление проекта прошло успешно!')
 			closeModal()
-			await router.push({ name: 'Projects' })
-			await router.go()
+			router.push({ name: 'Projects' })
+			router.go()
+			localStorage.setItem('projectRemoved', 'true')
 		}
 	} catch (error) {
 		console.error('Ошибка при удалении проекта:', error)
+		toast.error(
+			'Ошибка при удалении проекта: ' +
+				(err.response?.data?.message || 'Попробуйте снова.')
+		)
 	}
 }
 </script>

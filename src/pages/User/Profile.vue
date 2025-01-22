@@ -23,11 +23,13 @@ async function fetchUserData() {
 		})
 		.then(response => {
 			user.value = response.data
-			isLoaderVisible.value = false
 		})
 		.catch(error => {
 			console.error('Ошибка авторизации:', error)
 			Cookies.remove('token')
+		})
+		.finally(() => {
+			isLoaderVisible.value = false
 		})
 }
 
@@ -56,56 +58,61 @@ fetchUserData()
 
 <template>
 	<Loader v-if="isLoaderVisible" />
-	<div v-else class="profile">
-		<div class="profile-header">
-			<div class="logo-and-name">
-				<img
-					src="/icons/user-icon.svg"
-					alt="User Avatar"
-					class="profile-avatar"
-				/>
-				<h2 class="profile-name">{{ user.name }}</h2>
+	<div class="page" v-else>
+		<div class="profile">
+			<div class="profile-header">
+				<div class="logo-and-name">
+					<img
+						src="/icons/user-icon.svg"
+						alt="User Avatar"
+						class="profile-avatar"
+					/>
+					<h2 class="profile-name">{{ user.name }}</h2>
+				</div>
+				<div class="profile-action">
+					<button class="edit-button" @click="toggleEditMode">
+						{{ isEditing ? 'Отмена' : 'Изменить профиль' }}
+					</button>
+					<button class="get-out-btn" @click="get_out_user">Выйти</button>
+				</div>
 			</div>
-			<div class="profile-action">
-				<button class="edit-button" @click="toggleEditMode">
-					{{ isEditing ? 'Отмена' : 'Изменить профиль' }}
+			<div class="profile-details">
+				<div class="profile-detail">
+					<label for="name">Имя:</label>
+					<input
+						v-if="isEditing"
+						type="text"
+						v-model="user.name"
+						id="name"
+						class="profile-input"
+					/>
+					<p v-else>{{ user.name }}</p>
+				</div>
+
+				<div class="profile-detail">
+					<label for="email">Email:</label>
+					<input
+						v-if="isEditing"
+						type="email"
+						v-model="user.email"
+						id="email"
+						class="profile-input"
+					/>
+					<p v-else>{{ user.email }}</p>
+				</div>
+
+				<button v-if="isEditing" @click="saveProfile" class="save-button">
+					Сохранить изменения
 				</button>
-				<button class="get-out-btn" @click="get_out_user">Выйти</button>
 			</div>
-		</div>
-		<div class="profile-details">
-			<div class="profile-detail">
-				<label for="name">Имя:</label>
-				<input
-					v-if="isEditing"
-					type="text"
-					v-model="user.name"
-					id="name"
-					class="profile-input"
-				/>
-				<p v-else>{{ user.name }}</p>
-			</div>
-
-			<div class="profile-detail">
-				<label for="email">Email:</label>
-				<input
-					v-if="isEditing"
-					type="email"
-					v-model="user.email"
-					id="email"
-					class="profile-input"
-				/>
-				<p v-else>{{ user.email }}</p>
-			</div>
-
-			<button v-if="isEditing" @click="saveProfile" class="save-button">
-				Сохранить изменения
-			</button>
 		</div>
 	</div>
 </template>
 
 <style scoped>
+.page {
+	min-height: 75vh;
+}
 .profile {
 	padding: 30px;
 	background-color: #121212;
@@ -117,7 +124,6 @@ fetchUserData()
 	font-family: 'Poppins', sans-serif;
 	position: relative;
 	overflow: hidden;
-	min-height: 60vh;
 }
 
 .profile::before {

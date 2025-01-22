@@ -1,4 +1,20 @@
-<script setup></script>
+<script setup>
+import Cookies from 'js-cookie'
+import router from '@/router'
+
+const token = Cookies.get('token')
+
+function UserIsAuthenticated() {
+	if (!token) {
+		return
+	}
+	if (token) {
+		router.push('/projects')
+	}
+}
+
+UserIsAuthenticated()
+</script>
 
 <template>
 	<div class="home">
@@ -50,13 +66,6 @@
 </template>
 
 <style scoped>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
-}
-
 .hero {
 	display: flex;
 	align-items: center;

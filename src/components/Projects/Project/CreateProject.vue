@@ -4,12 +4,14 @@ import { defineEmits } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
 const projectName = ref('')
 const isCreateButtonDisabled = ref(true)
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
 const router = useRouter()
+const toast = useToast()
 
 const closeModal = () => {
 	emit('close')
@@ -30,13 +32,13 @@ const createProject = async () => {
 		)
 
 		if (response.status === 201) {
-			alert('Проект успешно создан!')
 			closeModal()
+			localStorage.setItem('projectCreated', 'true')
 			router.go()
 		}
 	} catch (err) {
 		console.error('Error creating project:', err)
-		alert(
+		toast.error(
 			'Ошибка при создании проекта: ' +
 				(err.response?.data?.message || 'Попробуйте снова.')
 		)
@@ -73,13 +75,6 @@ watch(projectName, newValue => {
 </template>
 
 <style scoped>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
-}
-
 .overlay {
 	position: fixed;
 	top: 0;

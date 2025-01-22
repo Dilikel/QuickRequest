@@ -2,11 +2,14 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const email = ref('')
 const password = ref('')
 const message = ref('')
-const isSuccess = ref(false)
+const router = useRouter()
+const toast = useToast()
 
 async function loginUser() {
 	await axios
@@ -28,21 +31,25 @@ async function loginUser() {
 			message.value = 'Вы успешно вошли!'
 			email.value = ''
 			password.value = ''
-			isSuccess.value = true
-			window.location.reload()
+			router.push({ name: 'Projects' })
+			localStorage.setItem('loginSuccess', 'true')
+			router.go()
 		})
 		.catch(error => {
 			message.value =
 				error.response?.data?.detail ||
 				'Ошибка, пожалуйста проверьте пароль или Email.'
-			isSuccess.value = false
+			toast.error(
+				'Ошибка при входе: ' +
+					(error.response?.data?.detail || 'Попробуйте снова.')
+			)
 		})
 }
 
 onMounted(() => {
 	const token = Cookies.get('token')
 	if (token) {
-		isSuccess.value = true
+		router.push({ name: 'Projects' })
 	}
 })
 </script>
@@ -50,7 +57,7 @@ onMounted(() => {
 <template>
 	<div class="login-wrapper">
 		<div class="login-container">
-			<form class="login-form" v-if="!isSuccess" @submit.prevent="loginUser">
+			<form class="login-form" @submit.prevent="loginUser">
 				<h2 class="login-title">Вход</h2>
 				<div class="inputs">
 					<input
@@ -73,20 +80,13 @@ onMounted(() => {
 					>Регистрация</router-link
 				>
 			</form>
-			<div class="message-error" v-if="!isSuccess && message">
-				<p>{{ message }}</p>
-			</div>
-			<div class="success-message" v-if="isSuccess">
-				<div class="icon-wrapper">
-					<img
-						src="/icons/success-icon.svg"
-						alt="success-icon"
-						class="success-icon"
+			<div class="message-error" v-if="message">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+					<path
+						d="M12 0C5.371 0 0 5.372 0 12s5.371 12 12 12 12-5.372 12-12S18.629 0 12 0zM13.5 18h-3v-3h3v3zm0-6h-3V6h3v6z"
 					/>
-				</div>
-				<h2>Вы успешно вошли в аккаунт!</h2>
-				<p>Добро пожаловать в <span class="brand-name">MovieLane!</span></p>
-				<router-link to="/" class="cta-button">Перейти на главную</router-link>
+				</svg>
+				<p>{{ message }}</p>
 			</div>
 		</div>
 	</div>
@@ -202,106 +202,47 @@ onMounted(() => {
 	border-color: transparent;
 }
 
-.message-success,
 .message-error {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
 	margin-top: 20px;
-	padding: 10px;
-	border-radius: 10px;
+	padding: 15px 20px;
+	border-radius: 15px;
 	text-align: center;
 	font-weight: bold;
+	background: #ff5252;
+	box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4),
+		inset 0 4px 6px rgba(255, 255, 255, 0.1);
+	color: white;
+	animation: fadeIn 0.5s ease-in-out;
 }
 
-.message-success {
-	background-color: rgba(76, 175, 80, 0.2);
-	color: green;
+.message-error svg {
+	width: 30px;
+	height: 30px;
+	flex-shrink: 0;
+	fill: white;
 }
 
-.message-error {
-	background-color: rgba(255, 0, 0, 0.2);
-	color: red;
+.message-error p {
+	font-size: 16px;
+	line-height: 1.5;
+	margin: 0;
 }
 
-.success-message {
-  background-color: #121212;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 15px 35px rgba(25, 25, 25, 0.5);
-  padding: 30px;
-  text-align: center;
-  border-radius: 20px;
-  max-width: 400px;
-  margin: auto;
-  color: white;
-  animation: slide-in 0.5s ease-out;
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
-.icon-wrapper {
-  margin-bottom: 20px;
-}
-
-.success-icon {
-  width: 80px;
-  height: 80px;
-  animation: pop-in 0.4s ease-out;
-}
-
-h2 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  font-weight: 400;
-}
-
-.brand-name {
-  font-weight: 700;
-  color:  #ff8a00;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-}
-
-.cta-button {
-  padding: 12px 24px;
-  background: linear-gradient(90deg, #ff8a00, #ff6b6b);
-  border: none;
-  border-radius: 30px;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
-  text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.4s ease;
-}
-
-.cta-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(255, 107, 107, 0.8);
-}
-
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 @media (max-width: 768px) {
 	.login-container {
 		padding: 30px;
