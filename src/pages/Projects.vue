@@ -62,6 +62,11 @@ async function toastification() {
 		toast.success('Вы успешно вошли!')
 		localStorage.removeItem('loginSuccess')
 	}
+	if (localStorage.getItem('RegistrationSuccess') === 'true') {
+		await sleep(1000)
+		toast.success('Вы успешно зарегистрировались!')
+		localStorage.removeItem('RegistrationSuccess')
+	}
 }
 
 onMounted(() => {
