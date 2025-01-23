@@ -376,6 +376,15 @@ onMounted(async () => {
 	.not-found-text {
 		font-size: 16px;
 	}
+	.NoneList {
+		font-size: 16px;
+	}
+	.NoneListInfo h1 {
+		font-size: 20px;
+		display: flex;
+		justify-content: center;
+	}
+
 	.container {
 		align-items: center;
 	}

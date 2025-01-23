@@ -383,4 +383,10 @@ authenticateUser()
 	justify-content: center;
 	text-decoration: none;
 }
+.login-button {
+	display: none;
+}
+.user {
+	display: none;
+}
 </style>
