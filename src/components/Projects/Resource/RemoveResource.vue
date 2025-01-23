@@ -3,6 +3,8 @@ import { defineProps } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import router from '@/router.js'
+import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
 	id: {
@@ -17,6 +19,8 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
+const resRouter = useRouter()
+const toast = useToast()
 
 const closeModal = () => {
 	emit('close')
@@ -35,12 +39,13 @@ const removeResource = async () => {
 			}
 		)
 		if (response.status === 200) {
-			alert('Удаление ресурса прошло успешно!')
-			closeModal()
-			router.go()
+			resRouter.push({ name: 'Project', params: { id: props.id } })
+			localStorage.setItem('resourceRemoved', 'true')
+			resRouter.go()
 		}
 	} catch (error) {
 		console.error('Ошибка при удалении ресурса:', error)
+		toast.error('Ошибка при удалении ресурса:', error)
 	}
 }
 </script>

@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
 	id: {
@@ -10,17 +12,18 @@ const props = defineProps({
 	},
 })
 
-const emit = defineEmits(['close'])
-const token = Cookies.get('token')
-
-const closeModal = () => {
-	emit('close')
-}
-
 const resourceName = ref('')
 const mode = ref('generator')
 const jsonData = ref('')
 const objects = ref([{ id: 1, name: '', additionalParams: {} }])
+const emit = defineEmits(['close'])
+const token = Cookies.get('token')
+const router = useRouter()
+const toast = useToast()
+
+const closeModal = () => {
+	emit('close')
+}
 
 const addObject = () => {
 	objects.value.push({
@@ -107,19 +110,19 @@ const createResource = async () => {
 			}
 		)
 		if (response.status === 201) {
-			alert('Ресурс успешно создан!')
-			closeModal()
-			window.location.reload()
+			router.push({ name: 'Project', params: { id: props.id } })
+			localStorage.setItem('resourceCreated', 'true')
+			router.go()
 		} else {
 			console.error('Ошибка при создании ресурса:', response.data)
 		}
 	} catch (err) {
-		alert('Ошибка при создании ресурса. Проверьте параметры.')
+		toast.error('Ошибка при создании ресурса. Проверьте параметры.')
 		console.error('Ошибка при создании ресурса:', err)
 	}
 }
 
-const setMode = newMode => {
+function setMode(newMode) {
 	mode.value = newMode
 }
 

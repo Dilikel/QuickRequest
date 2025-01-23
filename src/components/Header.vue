@@ -288,6 +288,12 @@ authenticateUser()
 	.user {
 		display: none;
 	}
+	.login-button {
+		display: none;
+	}
+	.user {
+		display: none;
+	}
 }
 
 @media (max-width: 560px) {
@@ -299,6 +305,12 @@ authenticateUser()
 	}
 	.mobile-menu-btn {
 		display: block;
+	}
+	.login-button {
+		display: none;
+	}
+	.user {
+		display: none;
 	}
 }
 
@@ -382,11 +394,5 @@ authenticateUser()
 	align-items: center;
 	justify-content: center;
 	text-decoration: none;
-}
-.login-button {
-	display: none;
-}
-.user {
-	display: none;
 }
 </style>

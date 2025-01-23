@@ -34,11 +34,11 @@ async function fetchItems() {
 		})
 }
 
-const toggleCreateProjectModal = () => {
+function toggleCreateProjectModal() {
 	showCreateProjectModal.value = !showCreateProjectModal.value
 }
 
-const isUserAuthenticated = () => {
+function isUserAuthenticated() {
 	if (!token) {
 		router.push({ name: 'Home' })
 	}

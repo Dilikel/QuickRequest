@@ -11,8 +11,6 @@ import SettingsProject from '@/components/Projects/Project/SettingsProject.vue'
 import SettingsResource from '@/components/Projects/Resource/SettingsResource.vue'
 import { useToast } from 'vue-toastification'
 
-const token = Cookies.get('token')
-
 const props = defineProps({
 	id: {
 		type: Number,
@@ -35,6 +33,8 @@ const isNotFound = ref(false)
 const items = ref([])
 const list = ref(true)
 const isLoaderVisible = ref(true)
+const toast = useToast()
+const token = Cookies.get('token')
 
 async function fetchProject() {
 	await axios
@@ -70,12 +70,12 @@ async function fetchItems() {
 		})
 }
 
-const openRemoveResource = resourceId => {
+function openRemoveResource(resourceId) {
 	resourceIdToRemove.value = resourceId
 	isRemoveResourceOpen.value = true
 }
 
-const openSettingsResource = resourceId => {
+function openSettingsResource(resourceId) {
 	resourceIdToRemove.value = resourceId
 	isResourceProjectOpen.value = true
 }
@@ -98,9 +98,21 @@ const firstLetter = computed(() => {
 	return project.value.name ? project.value.name.charAt(0).toUpperCase() : ''
 })
 
+async function toastification() {
+	if (localStorage.getItem('resourceCreated') === 'true') {
+		toast.success('Ресурс успешно создан!')
+		localStorage.removeItem('resourceCreated')
+	}
+	if (localStorage.getItem('resourceRemoved') === 'true') {
+		toast.success('Ресурс успешно удален!')
+		localStorage.removeItem('resourceRemoved')
+	}
+}
+
 onMounted(async () => {
 	await fetchProject()
 	await fetchItems()
+	await toastification()
 })
 </script>
 
