@@ -28,7 +28,6 @@ async function loginUser() {
 		.then(response => {
 			const token = response.data.token
 			Cookies.set('token', token, { expires: 31 })
-			message.value = 'Вы успешно вошли!'
 			email.value = ''
 			password.value = ''
 			router.push({ name: 'Projects' })

@@ -2,7 +2,7 @@
 import { defineProps } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import router from '@/router.js'
+import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 const props = defineProps({
@@ -15,6 +15,7 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 const toast = useToast()
 const token = Cookies.get('token')
+const router = useRouter()
 
 const closeModal = () => {
 	emit('close')
@@ -33,7 +34,6 @@ const removeProject = async () => {
 		if (response.status === 200) {
 			closeModal()
 			router.push({ name: 'Projects' })
-			router.go()
 			localStorage.setItem('projectRemoved', 'true')
 		}
 	} catch (error) {
