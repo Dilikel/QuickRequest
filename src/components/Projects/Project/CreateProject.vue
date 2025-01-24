@@ -17,9 +17,9 @@ const closeModal = () => {
 	emit('close')
 }
 
-const createProject = async () => {
-	try {
-		const response = await axios.post(
+async function createProject() {
+	await axios
+		.post(
 			`${import.meta.env.VITE_API_URL}/projects/create`,
 			{
 				projectname: projectName.value,
@@ -30,19 +30,20 @@ const createProject = async () => {
 				},
 			}
 		)
-
-		if (response.status === 201) {
-			closeModal()
-			localStorage.setItem('projectCreated', 'true')
-			router.go()
-		}
-	} catch (err) {
-		console.error('Error creating project:', err)
-		toast.error(
-			'Ошибка при создании проекта: ' +
-				(err.response?.data?.message || 'Попробуйте снова.')
-		)
-	}
+		.then(response => {
+			if (response.status === 201) {
+				closeModal()
+				localStorage.setItem('projectCreated', 'true')
+				router.go()
+			}
+		})
+		.catch(error => {
+			console.error('Error creating project:', err)
+			toast.error(
+				'Ошибка при создании проекта: ' +
+					(err.response?.data?.message || 'Попробуйте снова.')
+			)
+		})
 }
 
 watch(projectName, newValue => {

@@ -21,28 +21,27 @@ const closeModal = () => {
 	emit('close')
 }
 
-const removeProject = async () => {
-	try {
-		const response = await axios.delete(
-			`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}`,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+async function removeProject() {
+	await axios
+		.delete(`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		.then(response => {
+			if (response.status === 200) {
+				closeModal()
+				router.push({ name: 'Projects' })
+				localStorage.setItem('projectRemoved', 'true')
 			}
-		)
-		if (response.status === 200) {
-			closeModal()
-			router.push({ name: 'Projects' })
-			localStorage.setItem('projectRemoved', 'true')
-		}
-	} catch (error) {
-		console.error('Ошибка при удалении проекта:', error)
-		toast.error(
-			'Ошибка при удалении проекта: ' +
-				(err.response?.data?.message || 'Попробуйте снова.')
-		)
-	}
+		})
+		.catch(error => {
+			console.error('Ошибка при удалении проекта:', error)
+			toast.error(
+				'Ошибка при удалении проекта: ' +
+					(err.response?.data?.message || 'Попробуйте снова.')
+			)
+		})
 }
 </script>
 

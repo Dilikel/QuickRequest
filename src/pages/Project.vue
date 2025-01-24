@@ -9,6 +9,7 @@ import CreateResource from '@/components/Projects/Resource/CreateResource.vue'
 import RemoveResource from '@/components/Projects/Resource/RemoveResource.vue'
 import SettingsProject from '@/components/Projects/Project/SettingsProject.vue'
 import SettingsResource from '@/components/Projects/Resource/SettingsResource.vue'
+import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 const props = defineProps({
@@ -35,6 +36,7 @@ const list = ref(true)
 const isLoaderVisible = ref(true)
 const toast = useToast()
 const token = Cookies.get('token')
+const router = useRouter()
 
 async function fetchProject() {
 	await axios
@@ -117,7 +119,14 @@ async function toastification() {
 	}
 }
 
+function isUserAuthenticated() {
+	if (!token) {
+		router.push({ name: 'Home' })
+	}
+}
+
 onMounted(async () => {
+	await isUserAuthenticated()
 	await fetchProject()
 	await fetchItems()
 	await toastification()
