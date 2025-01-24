@@ -110,7 +110,7 @@ async function createResource() {
 			}
 		)
 		if (response.status === 201) {
-			router.push({ name: 'Project', params: { id: props.id } })
+			closeModal()
 			localStorage.setItem('resourceCreated', 'true')
 			router.go()
 		} else {

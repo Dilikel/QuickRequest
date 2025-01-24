@@ -111,6 +111,10 @@ async function toastification() {
 		toast.success('Проект успешно обновлен!')
 		localStorage.removeItem('projectUpdated')
 	}
+	if (localStorage.getItem('resourceUpdated') === 'true') {
+		toast.success('Ресурс успешно обновлен!')
+		localStorage.removeItem('resourceUpdated')
+	}
 }
 
 onMounted(async () => {

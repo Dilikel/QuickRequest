@@ -38,7 +38,7 @@ async function removeResource() {
 			}
 		)
 		if (response.status === 200) {
-			resRouter.push({ name: 'Project', params: { id: props.id } })
+			closeModal()
 			localStorage.setItem('resourceRemoved', 'true')
 			resRouter.go()
 		}

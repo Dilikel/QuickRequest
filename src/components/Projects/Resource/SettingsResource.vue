@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import router from '@/router.js'
+import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
 	id: {
@@ -17,6 +18,9 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
+const body = ref('')
+const res_router = useRouter()
+const toast = useToast()
 
 const closeModal = () => {
 	emit('close')
@@ -28,11 +32,9 @@ const resource = ref({
 	body: [],
 })
 
-const body = ref('')
-
-const fetchResource = async () => {
-	try {
-		const response = await axios.get(
+async function fetchResource() {
+	await axios
+		.get(
 			`${import.meta.env.VITE_API_URL}/projects/${props.id}/resource/${
 				props.resourceId
 			}`,
@@ -42,16 +44,19 @@ const fetchResource = async () => {
 				},
 			}
 		)
-		resource.value = response.data
-		body.value = JSON.stringify(response.data.body, null, 2)
-	} catch (err) {
-		console.log(err)
-	}
+		.then(response => {
+			resource.value = response.data
+			body.value = JSON.stringify(response.data.body, null, 2)
+		})
+		.catch(error => {
+			console.error('Error fetching projects:', error)
+			toast.error('Произошла ошибка при обновлении проекта!')
+		})
 }
 
-const saveResource = async () => {
-	try {
-		const response = await axios.patch(
+async function saveResource() {
+	await axios
+		.patch(
 			`${import.meta.env.VITE_API_URL}/projects/change/resource`,
 			{
 				projectId: props.id,
@@ -65,20 +70,20 @@ const saveResource = async () => {
 				},
 			}
 		)
-		console.log(response.data)
-		if (response.status === 200) {
-			alert('Изменения сохранены!')
-			closeModal()
-			router.go()
-		}
-	} catch (err) {
-		console.log(err)
-	}
+		.then(response => {
+			if (response.status === 200) {
+				localStorage.setItem('resourceUpdated', 'true')
+				closeModal()
+				res_router.go()
+			}
+		})
+		.catch(error => {
+			console.log(err)
+			toast.error('Произошла ошибка при обновлении ресурса!')
+		})
 }
 
-onMounted(async () => {
-	await fetchResource()
-})
+fetchResource()
 </script>
 
 <template>
