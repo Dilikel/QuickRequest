@@ -8,6 +8,7 @@ import Loader from '@/components/Loader.vue'
 const router = useRouter()
 const token = Cookies.get('token')
 const isLoaderVisible = ref(true)
+const isEditing = ref(false)
 
 const user = ref({
 	name: '',
@@ -44,7 +45,6 @@ async function get_out_user() {
 	}
 }
 
-const isEditing = ref(false)
 const toggleEditMode = () => {
 	isEditing.value = !isEditing.value
 }
@@ -73,7 +73,9 @@ fetchUserData()
 					<button class="edit-button" @click="toggleEditMode">
 						{{ isEditing ? 'Отмена' : 'Изменить профиль' }}
 					</button>
-					<button class="get-out-btn" @click="get_out_user">Выйти</button>
+					<button class="get-out-btn" @click="get_out_user" v-if="!isEditing">
+						Выйти
+					</button>
 				</div>
 			</div>
 			<div class="profile-details">

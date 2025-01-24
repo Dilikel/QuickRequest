@@ -69,7 +69,7 @@ const isFormValid = computed(() => {
 	}
 })
 
-const createResource = async () => {
+async function createResource() {
 	try {
 		let data = ''
 		if (mode.value === 'generator') {

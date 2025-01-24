@@ -294,6 +294,9 @@ authenticateUser()
 	.user {
 		display: none;
 	}
+	.loader {
+		display: none;
+	}
 }
 
 @media (max-width: 560px) {
@@ -310,6 +313,9 @@ authenticateUser()
 		display: none;
 	}
 	.user {
+		display: none;
+	}
+	.loader {
 		display: none;
 	}
 }

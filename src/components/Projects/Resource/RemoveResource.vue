@@ -2,7 +2,6 @@
 import { defineProps } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import router from '@/router.js'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 
@@ -26,7 +25,7 @@ const closeModal = () => {
 	emit('close')
 }
 
-const removeResource = async () => {
+async function removeResource() {
 	try {
 		const response = await axios.delete(
 			`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}/resource/${

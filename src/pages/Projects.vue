@@ -43,11 +43,6 @@ function isUserAuthenticated() {
 		router.push({ name: 'Home' })
 	}
 }
-
-function sleep(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 async function toastification() {
 	if (localStorage.getItem('projectCreated') === 'true') {
 		toast.success('Проект успешно создан!')
@@ -58,21 +53,19 @@ async function toastification() {
 		localStorage.removeItem('projectRemoved')
 	}
 	if (localStorage.getItem('loginSuccess') === 'true') {
-		await sleep(1000)
 		toast.success('Вы успешно вошли!')
 		localStorage.removeItem('loginSuccess')
 	}
 	if (localStorage.getItem('RegistrationSuccess') === 'true') {
-		await sleep(1000)
 		toast.success('Вы успешно зарегистрировались!')
 		localStorage.removeItem('RegistrationSuccess')
 	}
 }
 
-onMounted(() => {
-	fetchItems()
-	isUserAuthenticated()
-	toastification()
+onMounted(async () => {
+	await fetchItems()
+	await isUserAuthenticated()
+	await toastification()
 })
 </script>
 

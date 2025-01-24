@@ -1,7 +1,9 @@
 <script setup>
-import { defineEmits, ref, onMounted } from 'vue'
+import { defineEmits, ref } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
 	projectId: {
@@ -11,23 +13,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
-
-const fetchProject = async () => {
-	try {
-		const response = await axios.get(
-			`${import.meta.env.VITE_API_URL}/projects/${props.projectId}`,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			}
-		)
-		project.value = response.data
-	} catch (err) {
-		console.log(err)
-	}
-}
-
+const router = useRouter()
+const toast = useToast()
 const project = ref({
 	name: '',
 	projectId: '',
@@ -36,9 +23,25 @@ const closeModal = () => {
 	emit('close')
 }
 
-const saveProject = async () => {
-	try {
-		const response = await axios.patch(
+async function fetchProject() {
+	await axios
+		.get(`${import.meta.env.VITE_API_URL}/projects/${props.projectId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		.then(response => {
+			project.value = response.data
+		})
+		.catch(error => {
+			console.error('Error fetching projects:', error)
+			toast.error('Произошла ошибка при обновлении проекта!')
+		})
+}
+
+async function saveProject() {
+	await axios
+		.patch(
 			`${import.meta.env.VITE_API_URL}/projects/${props.projectId}/change/name`,
 			{ newName: project.value.name },
 			{
@@ -47,22 +50,20 @@ const saveProject = async () => {
 				},
 			}
 		)
-		if (response.status === 200) {
-			alert('Изменения сохранены!')
-			closeModal()
-			window.location.reload()
-		}
-	} catch (err) {
-		console.log(err)
-		if (err.response.status === 401) {
-			alert('Вы не авторизованы!')
-		} else {
-			alert('Произошла ошибка!')
-		}
-	}
+		.then(response => {
+			if (response.status === 200) {
+				localStorage.setItem('projectUpdated', 'true')
+				closeModal()
+				router.go()
+			}
+		})
+		.catch(error => {
+			console.error('Error fetching projects:', error)
+			toast.error('Произошла ошибка при обновлении проекта!')
+		})
 }
 
-onMounted(fetchProject)
+fetchProject()
 </script>
 
 <template>
