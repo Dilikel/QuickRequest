@@ -4,14 +4,18 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 const email = ref('')
 const password = ref('')
 const message = ref('')
 const router = useRouter()
 const toast = useToast()
+const isLoading = ref(false)
+const authStore = useAuthStore()
 
 async function loginUser() {
+	isLoading.value = true
 	await axios
 		.post(
 			`${import.meta.env.VITE_API_URL}/login`,
@@ -30,18 +34,17 @@ async function loginUser() {
 			Cookies.set('token', token, { expires: 31 })
 			email.value = ''
 			password.value = ''
+			authStore.authenticateUser()
 			router.push({ name: 'Projects' })
-			localStorage.setItem('loginSuccess', 'true')
-			router.go()
+			toast.success('Вы успешно вошли!')
 		})
 		.catch(error => {
 			message.value =
-				error.response?.data?.detail ||
-				'Ошибка, пожалуйста проверьте пароль или Email.'
-			toast.error(
-				'Ошибка при входе: ' +
-					(error.response?.data?.detail || 'Попробуйте снова.')
-			)
+				error.response?.data?.detail || 'Ошибка. Проверьте Email и пароль.'
+			toast.error(message.value)
+		})
+		.finally(() => {
+			isLoading.value = false
 		})
 }
 
@@ -74,8 +77,10 @@ onMounted(() => {
 						required
 					/>
 				</div>
-				<button type="submit" class="submit-button">Войти</button>
-				<router-link to="/register" class="register-button"
+				<button type="submit" class="submit-button" :disabled="isLoading">
+					{{ isLoading ? 'Загрузка...' : 'Войти' }}
+				</button>
+				<router-link to="/signup" class="register-button"
 					>Регистрация</router-link
 				>
 			</form>

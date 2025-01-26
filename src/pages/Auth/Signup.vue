@@ -4,6 +4,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 const name = ref('')
 const age = ref('')
@@ -15,6 +16,7 @@ const confirmPasswordHint = ref('')
 const message = ref('')
 const router = useRouter()
 const toast = useToast()
+const authStore = useAuthStore()
 
 async function registerUser() {
 	message.value = ''
@@ -40,9 +42,9 @@ async function registerUser() {
 		.then(response => {
 			const token = response.data.token
 			Cookies.set('token', token, { expires: 31 })
+			authStore.authenticateUser()
 			router.push({ name: 'Projects' })
-			localStorage.setItem('RegistrationSuccess', 'true')
-			router.go()
+			toast.success('Вы успешно зарегистрировались!')
 		})
 		.catch(error => {
 			message.value =
@@ -132,7 +134,10 @@ onMounted(() => {
 						{{ confirmPasswordHint }}
 					</p>
 				</div>
-				<button type="submit" class="submit-button">Продолжить</button>
+				<button type="submit" class="submit-button" :disabled="isLoading">
+					{{ isLoading ? 'Регистрация...' : 'Зарегистрироваться' }}
+				</button>
+				<router-link to="/login" class="back-button">Назад</router-link>
 				<div class="message-error" v-if="message">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 						<path
@@ -274,6 +279,30 @@ onMounted(() => {
 		opacity: 1;
 		transform: translateY(0);
 	}
+}
+
+.back-button {
+	width: 100%;
+	user-select: none;
+	padding: 15px;
+	background: transparent;
+	border: 2px solid white;
+	border-radius: 30px;
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+	transition: background-color 0.4s ease, transform 0.3s ease,
+		box-shadow 0.4s ease;
+	margin-top: 10px;
+}
+
+.back-button:hover {
+	background: linear-gradient(90deg, #ff8a00, #ff6b6b);
+	transform: translateY(-3px);
+	box-shadow: 0 12px 24px rgba(255, 107, 107, 0.8);
+	border-color: transparent;
 }
 
 @media (max-width: 768px) {

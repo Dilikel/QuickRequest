@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/pages/Home.vue'
 import Login from '@/pages/Auth/Login.vue'
-import Register from '@/pages/Auth/Register.vue'
+import Signup from './pages/Auth/Signup.vue'
 import Profile from '@/pages/User/Profile.vue'
 import Projects from '@/pages/Projects.vue'
 import Project from '@/pages/Project.vue'
 import PrivacyPolicy from './pages/PrivacyPolicy.vue'
 import Error from './Error.vue'
-
 
 const routes = [
 	{
@@ -23,9 +22,9 @@ const routes = [
 		meta: { layout: 'Default' },
 	},
 	{
-		path: '/register',
-		name: 'Register',
-		component: Register,
+		path: '/signup',
+		name: 'Signup',
+		component: Signup,
 		meta: { layout: 'Default' },
 	},
 	{

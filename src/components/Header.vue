@@ -1,44 +1,11 @@
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
-import Cookies from 'js-cookie'
+import { useAuthStore } from '@/stores/authStore'
 
-const isAuthenticated = ref(false)
-const userName = ref('')
-const token = Cookies.get('token')
 const isMenuOpen = ref(false)
-const isLoaderVisible = ref(true)
+const authStore = useAuthStore()
 
-function authenticateUser() {
-	if (!token) {
-		isLoaderVisible.value = false
-		return
-	}
-
-	axios
-		.get(`${import.meta.env.VITE_API_URL}/auth`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
-		.then(response => {
-			const { data } = response
-			isAuthenticated.value = true
-			userName.value = data.name
-			isLoaderVisible.value = false
-			if (data.new_access_token) {
-				Cookies.set('token', data.new_access_token, { expires: 31 })
-			}
-		})
-		.catch(error => {
-			console.error('Ошибка авторизации:', error)
-			isLoaderVisible.value = false
-			Cookies.remove('token')
-			isAuthenticated.value = false
-		})
-}
-
-authenticateUser()
+authStore.authenticateUser()
 </script>
 <template>
 	<header class="header">
@@ -55,11 +22,14 @@ authenticateUser()
 				</ul>
 			</div>
 			<div class="header-action">
-				<div v-if="isLoaderVisible" class="loader">
+				<div v-if="authStore.isLoaderVisible" class="loader">
 					<div class="wave"></div>
 				</div>
 				<div class="buttons" v-else>
-					<router-link v-if="!isAuthenticated" to="/login" class="login-button"
+					<router-link
+						v-if="!authStore.isAuthenticated"
+						to="/login"
+						class="login-button"
 						>ВОЙТИ</router-link
 					>
 					<router-link v-else to="/profile" class="user">
@@ -77,7 +47,7 @@ authenticateUser()
 								d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
 							/>
 						</svg>
-						<p>{{ userName }}</p>
+						<p>{{ authStore.userName }}</p>
 					</router-link>
 				</div>
 			</div>
@@ -104,13 +74,13 @@ authenticateUser()
 				<router-link to="/">Документация</router-link>
 			</li>
 			<router-link
-				v-if="!isAuthenticated"
+				v-if="!authStore.isAuthenticated"
 				to="/login"
 				@click="isMenuOpen = false"
 				class="mobile-menu-item mobile-start-btn"
 				>Войти</router-link
 			>
-			<li class="mobile-menu-item" v-if="isAuthenticated">
+			<li class="mobile-menu-item" v-if="authStore.isAuthenticated">
 				<router-link to="/profile" @click="isMenuOpen = false"
 					>Профиль</router-link
 				>
