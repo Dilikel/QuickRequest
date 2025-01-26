@@ -52,14 +52,6 @@ async function toastification() {
 		toast.success('Проект успешно удален!')
 		localStorage.removeItem('projectRemoved')
 	}
-	if (localStorage.getItem('loginSuccess') === 'true') {
-		toast.success('Вы успешно вошли!')
-		localStorage.removeItem('loginSuccess')
-	}
-	if (localStorage.getItem('RegistrationSuccess') === 'true') {
-		toast.success('Вы успешно зарегистрировались!')
-		localStorage.removeItem('RegistrationSuccess')
-	}
 }
 
 onMounted(async () => {
