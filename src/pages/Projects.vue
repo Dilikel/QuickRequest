@@ -2,67 +2,29 @@
 import ProjectCardList from '@/components/Projects/Project/ProjectCardList.vue'
 import CreateProject from '@/components/Projects/Project/CreateProject.vue'
 import Loader from '@/components/Loader.vue'
-import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import Cookies from 'js-cookie'
 import router from '@/router.js'
-import { useToast } from 'vue-toastification'
+import { useProjectsStore } from '@/stores/projectsStore'
 
-const items = ref([])
-const list = ref(true)
 const showCreateProjectModal = ref(false)
 const token = Cookies.get('token')
-const isLoaderVisible = ref(true)
-const toast = useToast()
-
-async function fetchItems() {
-	await axios
-		.get(`${import.meta.env.VITE_API_URL}/projects/`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
-		.then(response => {
-			items.value = response.data
-			list.value = items.value.length > 0
-		})
-		.catch(error => {
-			console.error('Error fetching projects:', error)
-		})
-		.finally(() => {
-			isLoaderVisible.value = false
-		})
-}
+const projectsStore = useProjectsStore()
 
 function toggleCreateProjectModal() {
 	showCreateProjectModal.value = !showCreateProjectModal.value
 }
 
-function isUserAuthenticated() {
+onMounted(() => {
 	if (!token) {
 		router.push({ name: 'Home' })
 	}
-}
-async function toastification() {
-	if (localStorage.getItem('projectCreated') === 'true') {
-		toast.success('Проект успешно создан!')
-		localStorage.removeItem('projectCreated')
-	}
-	if (localStorage.getItem('projectRemoved') === 'true') {
-		toast.success('Проект успешно удален!')
-		localStorage.removeItem('projectRemoved')
-	}
-}
-
-onMounted(async () => {
-	await fetchItems()
-	await isUserAuthenticated()
-	await toastification()
+	projectsStore.fetchItems()
 })
 </script>
 
 <template>
-	<Loader v-if="isLoaderVisible" />
+	<Loader v-if="projectsStore.isLoaderVisible" />
 	<div class="projects" v-else>
 		<div class="container">
 			<div class="title">
@@ -74,8 +36,8 @@ onMounted(async () => {
 					</button>
 				</div>
 			</div>
-			<div class="project-list" v-if="list">
-				<ProjectCardList :items="items" />
+			<div class="project-list" v-if="projectsStore.list">
+				<ProjectCardList :items="projectsStore.items" />
 			</div>
 			<div class="NoneList" v-else>
 				<div class="NoneListInfo">

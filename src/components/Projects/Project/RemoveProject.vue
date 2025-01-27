@@ -1,9 +1,10 @@
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import { useProjectsStore } from '@/stores/projectsStore'
 
 const props = defineProps({
 	id: {
@@ -16,12 +17,15 @@ const emit = defineEmits(['close'])
 const toast = useToast()
 const token = Cookies.get('token')
 const router = useRouter()
+const projectsStore = useProjectsStore()
+const isLoading = ref(false)
 
 const closeModal = () => {
 	emit('close')
 }
 
 async function removeProject() {
+	isLoading.value = true
 	await axios
 		.delete(`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}`, {
 			headers: {
@@ -30,9 +34,10 @@ async function removeProject() {
 		})
 		.then(response => {
 			if (response.status === 200) {
+				projectsStore.fetchItems()
 				closeModal()
 				router.push({ name: 'Projects' })
-				localStorage.setItem('projectRemoved', 'true')
+				toast.success('Проект успешно удален!')
 			}
 		})
 		.catch(error => {
@@ -41,6 +46,9 @@ async function removeProject() {
 				'Ошибка при удалении проекта: ' +
 					(err.response?.data?.message || 'Попробуйте снова.')
 			)
+		})
+		.finally(() => {
+			isLoading.value = false
 		})
 }
 </script>
@@ -51,7 +59,13 @@ async function removeProject() {
 			<div class="card">
 				<h3>Вы уверены, что хотите удалить проект?</h3>
 				<div class="actions">
-					<button class="remove-btn" @click="removeProject">Да</button>
+					<button
+						class="remove-btn"
+						@click="removeProject"
+						:disabled="isLoading"
+					>
+						{{ isLoading ? 'Подождите...' : 'Да' }}
+					</button>
 					<button class="back-btn" @click="closeModal">Отмена</button>
 				</div>
 			</div>
@@ -60,13 +74,6 @@ async function removeProject() {
 </template>
 
 <style scoped>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
-}
-
 .container {
 	display: flex;
 	align-items: center;
@@ -131,6 +138,12 @@ async function removeProject() {
 
 .remove-btn:hover {
 	background-color: #e04343;
+}
+.remove-btn:disabled {
+	background: #555;
+	color: #aaa;
+	cursor: not-allowed;
+	box-shadow: none;
 }
 
 .back-btn {

@@ -22,6 +22,7 @@ const props = defineProps({
 const project = ref({
 	name: '',
 	projectId: '',
+	resources: [],
 })
 
 const isRemoveProjectOpen = ref(false)
@@ -31,12 +32,12 @@ const isSettingsProjectOpen = ref(false)
 const isResourceProjectOpen = ref(false)
 const resourceIdToRemove = ref(null)
 const isNotFound = ref(false)
-const items = ref([])
-const list = ref(true)
 const isLoaderVisible = ref(true)
+const list = ref(true)
 const toast = useToast()
 const token = Cookies.get('token')
 const router = useRouter()
+const items = ref([])
 
 async function fetchProject() {
 	await axios
@@ -47,25 +48,12 @@ async function fetchProject() {
 		})
 		.then(response => {
 			project.value = response.data
+			items.value = response.data.resources || []
+			list.value = project.value.resources.length > 0
 		})
 		.catch(error => {
 			console.error('Error fetching projects:', error)
-		})
-}
-
-async function fetchItems() {
-	await axios
-		.get(`${import.meta.env.VITE_API_URL}/projects/${props.id}/resource`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
-		.then(response => {
-			items.value = response.data
-			list.value = items.value.length > 0
-		})
-		.catch(error => {
-			console.error('Error fetching projects:', error)
+			isNotFound.value = true
 		})
 		.finally(() => {
 			isLoaderVisible.value = false
@@ -119,17 +107,12 @@ async function toastification() {
 	}
 }
 
-function isUserAuthenticated() {
+onMounted(() => {
 	if (!token) {
 		router.push({ name: 'Home' })
 	}
-}
-
-onMounted(async () => {
-	await isUserAuthenticated()
-	await fetchProject()
-	await fetchItems()
-	await toastification()
+	fetchProject()
+	toastification()
 })
 </script>
 

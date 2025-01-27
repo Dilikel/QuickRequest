@@ -3,21 +3,22 @@ import { ref, watch } from 'vue'
 import { defineEmits } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import { useProjectsStore } from '@/stores/projectsStore'
 
 const projectName = ref('')
-const isCreateButtonDisabled = ref(true)
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
-const router = useRouter()
 const toast = useToast()
+const projectsStore = useProjectsStore()
+const isLoading = ref(false)
 
 const closeModal = () => {
 	emit('close')
 }
 
 async function createProject() {
+	isLoading.value = true
 	await axios
 		.post(
 			`${import.meta.env.VITE_API_URL}/projects/create`,
@@ -32,9 +33,9 @@ async function createProject() {
 		)
 		.then(response => {
 			if (response.status === 201) {
+				projectsStore.fetchItems()
 				closeModal()
-				localStorage.setItem('projectCreated', 'true')
-				router.go()
+				toast.success('Проект успешно создан!')
 			}
 		})
 		.catch(error => {
@@ -43,6 +44,9 @@ async function createProject() {
 				'Ошибка при создании проекта: ' +
 					(err.response?.data?.message || 'Попробуйте снова.')
 			)
+		})
+		.finally(() => {
+			isLoading.value = false
 		})
 }
 
@@ -65,9 +69,9 @@ watch(projectName, newValue => {
 				<button
 					class="create-button"
 					@click="createProject"
-					:disabled="isCreateButtonDisabled"
+					:disabled="isLoading"
 				>
-					Создать проект
+					{{ isLoading ? 'Подождите...' : 'Создать проект' }}
 				</button>
 				<button class="cancel-button" @click="closeModal">Отмена</button>
 			</div>
@@ -156,7 +160,7 @@ watch(projectName, newValue => {
 .cancel-button {
 	padding: 15px 20px;
 	font-size: 18px;
-	border-radius: 30px;
+	border-radius: 15px;
 	border: none;
 	cursor: pointer;
 	transition: transform 0.3s ease, box-shadow 0.4s ease;

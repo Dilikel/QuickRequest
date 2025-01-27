@@ -4,11 +4,15 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
 import Loader from '@/components/Loader.vue'
+import { useToast } from 'vue-toastification'
+import { useAuthStore } from '@/stores/authStore'
 
 const router = useRouter()
 const token = Cookies.get('token')
 const isLoaderVisible = ref(true)
 const isEditing = ref(false)
+const toast = useToast()
+const authStore = useAuthStore()
 
 const user = ref({
 	name: '',
@@ -38,13 +42,13 @@ async function get_out_user() {
 	try {
 		Cookies.remove('token')
 		router.push({ name: 'Home' }).then(() => {
-			window.location.reload()
+			authStore.authenticateUser()
+			toast.success('Вы успешно вышли из аккаунта!')
 		})
 	} catch (error) {
 		console.error('Ошибка при выходе из аккаунта:', error)
 	}
 }
-
 const toggleEditMode = () => {
 	isEditing.value = !isEditing.value
 }
