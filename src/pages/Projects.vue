@@ -7,13 +7,9 @@ import Cookies from 'js-cookie'
 import router from '@/router.js'
 import { useProjectsStore } from '@/stores/projectsStore'
 
-const showCreateProjectModal = ref(false)
+const isCreateOpen = ref(false)
 const token = Cookies.get('token')
 const projectsStore = useProjectsStore()
-
-function toggleCreateProjectModal() {
-	showCreateProjectModal.value = !showCreateProjectModal.value
-}
 
 onMounted(() => {
 	if (!token) {
@@ -30,7 +26,7 @@ onMounted(() => {
 			<div class="title">
 				<h1>Ваши проекты</h1>
 				<div class="action">
-					<button class="create-btn" @click="toggleCreateProjectModal">
+					<button class="create-btn" @click="isCreateOpen = true">
 						<img src="/icons/package_plus.svg" alt="package" />
 						Создать проект
 					</button>
@@ -47,10 +43,7 @@ onMounted(() => {
 				</div>
 			</div>
 		</div>
-		<CreateProject
-			v-if="showCreateProjectModal"
-			@close="toggleCreateProjectModal"
-		/>
+		<CreateProject v-if="isCreateOpen" @close="isCreateOpen = false" />
 	</div>
 </template>
 
