@@ -4,7 +4,6 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import { useProjectsStore } from '@/stores/projectsStore'
 
 const props = defineProps({
 	id: {
@@ -17,7 +16,6 @@ const emit = defineEmits(['close'])
 const toast = useToast()
 const token = Cookies.get('token')
 const router = useRouter()
-const projectsStore = useProjectsStore()
 const isLoading = ref(false)
 
 const closeModal = () => {
@@ -34,7 +32,6 @@ async function removeProject() {
 		})
 		.then(response => {
 			if (response.status === 200) {
-				projectsStore.fetchItems()
 				closeModal()
 				router.push({ name: 'Projects' })
 				toast.success('Проект успешно удален!')

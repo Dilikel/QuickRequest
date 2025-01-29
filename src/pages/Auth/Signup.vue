@@ -4,7 +4,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
+import { useUserStore } from '@/stores/user'
 
 const name = ref('')
 const age = ref('')
@@ -16,7 +16,7 @@ const confirmPasswordHint = ref('')
 const message = ref('')
 const router = useRouter()
 const toast = useToast()
-const authStore = useAuthStore()
+const userStore = useUserStore()
 
 async function registerUser() {
 	message.value = ''
@@ -42,7 +42,10 @@ async function registerUser() {
 		.then(response => {
 			const token = response.data.token
 			Cookies.set('token', token, { expires: 31 })
-			authStore.authenticateUser()
+			userStore.setUser({
+				name: response.data.user.name,
+				email: response.data.user.email,
+			})
 			router.push({ name: 'Projects' })
 			toast.success('Вы успешно зарегистрировались!')
 		})

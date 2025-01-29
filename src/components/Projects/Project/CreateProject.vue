@@ -4,13 +4,12 @@ import { defineEmits } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
-import { useProjectsStore } from '@/stores/projectsStore'
+import router from '@/router'
 
 const projectName = ref('')
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
 const toast = useToast()
-const projectsStore = useProjectsStore()
 const isLoading = ref(false)
 
 const closeModal = () => {
@@ -33,7 +32,6 @@ async function createProject() {
 		)
 		.then(response => {
 			if (response.status === 201) {
-				projectsStore.fetchItems()
 				closeModal()
 				toast.success('Проект успешно создан!')
 			}

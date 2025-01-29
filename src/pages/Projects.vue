@@ -2,25 +2,46 @@
 import ProjectCardList from '@/components/Projects/Project/ProjectCardList.vue'
 import CreateProject from '@/components/Projects/Project/CreateProject.vue'
 import Loader from '@/components/Loader.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
 import Cookies from 'js-cookie'
 import router from '@/router.js'
-import { useProjectsStore } from '@/stores/projectsStore'
 
 const isCreateOpen = ref(false)
 const token = Cookies.get('token')
-const projectsStore = useProjectsStore()
+const items = ref([])
+const list = ref(true)
+const isLoaderVisible = ref(true)
+
+async function fetchItems() {
+	await axios
+		.get(`${import.meta.env.VITE_API_URL}/projects/`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		.then(response => {
+			items.value = response.data
+			list.value = items.value.length > 0
+		})
+		.catch(error => {
+			console.error('Error fetching projects:', error)
+		})
+		.finally(() => {
+			isLoaderVisible.value = false
+		})
+}
 
 onMounted(() => {
 	if (!token) {
 		router.push({ name: 'Home' })
 	}
-	projectsStore.fetchItems()
+	fetchItems()
 })
 </script>
 
 <template>
-	<Loader v-if="projectsStore.isLoaderVisible" />
+	<Loader v-if="isLoaderVisible" />
 	<div class="projects" v-else>
 		<div class="container">
 			<div class="title">
@@ -32,8 +53,8 @@ onMounted(() => {
 					</button>
 				</div>
 			</div>
-			<div class="project-list" v-if="projectsStore.list">
-				<ProjectCardList :items="projectsStore.items" />
+			<div class="project-list" v-if="list">
+				<ProjectCardList :items="items" />
 			</div>
 			<div class="NoneList" v-else>
 				<div class="NoneListInfo">

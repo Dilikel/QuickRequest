@@ -1,54 +1,28 @@
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
 import Cookies from 'js-cookie'
-import Loader from '@/components/Loader.vue'
 import { useToast } from 'vue-toastification'
-import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const token = Cookies.get('token')
-const isLoaderVisible = ref(true)
 const isEditing = ref(false)
 const toast = useToast()
-const authStore = useAuthStore()
-
-const user = ref({
-	name: '',
-	email: '',
-})
-
-async function fetchUserData() {
-	await axios
-		.get(`${import.meta.env.VITE_API_URL}/auth`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		})
-		.then(response => {
-			user.value = response.data
-		})
-		.catch(error => {
-			console.error('Ошибка авторизации:', error)
-			Cookies.remove('token')
-		})
-		.finally(() => {
-			isLoaderVisible.value = false
-		})
-}
+const userStore = useUserStore()
+const user = computed(() => userStore.getUser)
 
 async function get_out_user() {
 	try {
 		Cookies.remove('token')
-		router.push({ name: 'Home' }).then(() => {
-			authStore.authenticateUser()
-			toast.success('Вы успешно вышли из аккаунта!')
-		})
+		router.push({ name: 'Home' })
+		userStore.logout()
+		toast.success('Вы успешно вышли из аккаунта!')
 	} catch (error) {
 		console.error('Ошибка при выходе из аккаунта:', error)
 	}
 }
+
 const toggleEditMode = () => {
 	isEditing.value = !isEditing.value
 }
@@ -57,7 +31,12 @@ const saveProfile = () => {
 	toggleEditMode()
 }
 
-fetchUserData()
+onMounted(() => {
+	if (!token) {
+		router.push({ name: 'Home' })
+		toast.error('Вы не авторизованы!')
+	}
+})
 </script>
 
 <template>
