@@ -100,30 +100,31 @@ async function createResource() {
 				body: parsedBody,
 			}
 		}
-		const response = await axios.post(
-			`${import.meta.env.VITE_API_URL}/projects/create/resource`,
-			data,
-			{
+		await axios
+			.post(`${import.meta.env.VITE_API_URL}/projects/create/resource`, data, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
-			}
-		)
-		if (response.status === 201) {
-			toast.success('Ресурс успешно создан!')
-			emit('resourceCreated')
-			closeModal()
-		} else {
-			console.error('Ошибка при создании ресурса:', response.data)
-		}
-	} catch (err) {
-		toast.error('Ошибка при создании ресурса. Проверьте параметры.')
-		console.error('Ошибка при создании ресурса:', err)
-	} finally {
-		isLoading.value = false
+			})
+			.then(response => {
+				if (response.status === 201) {
+					toast.success('Ресурс успешно создан!')
+					emit('resourceCreated')
+					closeModal()
+				}
+			})
+			.catch(error => {
+				toast.error('Ошибка при создании ресурса. Проверьте параметры.')
+				console.error('Ошибка при создании ресурса:', err)
+			})
+			.finally(() => {
+				isLoading.value = false
+			})
+	} catch (error) {
+		console.error('Error creating resource:', error)
+		toast.error('Произошла ошибка при создании ресурса!')
 	}
 }
-
 function setMode(newMode) {
 	mode.value = newMode
 }

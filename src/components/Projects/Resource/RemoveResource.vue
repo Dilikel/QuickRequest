@@ -26,9 +26,9 @@ const closeModal = () => {
 }
 
 async function removeResource() {
-	try {
-		isLoading.value = true
-		const response = await axios.delete(
+	isLoading.value = true
+	await axios
+		.delete(
 			`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}/resource/${
 				props.resourceId
 			}/`,
@@ -38,17 +38,18 @@ async function removeResource() {
 				},
 			}
 		)
-		if (response.status === 200) {
+		.then(response => {
 			toast.success('Ресурс успешно удален!')
 			emit('remove-resource', props.resourceId)
 			closeModal()
-		}
-	} catch (error) {
-		console.error('Ошибка при удалении ресурса:', error)
-		toast.error('Ошибка при удалении ресурса:', error)
-	} finally {
-		isLoading.value = false
-	}
+		})
+		.catch(error => {
+			console.error('Ошибка при удалении ресурса:', error)
+			toast.error('Ошибка при удалении ресурса:', error)
+		})
+		.finally(() => {
+			isLoading.value = false
+		})
 }
 </script>
 

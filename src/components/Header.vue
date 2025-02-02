@@ -58,9 +58,9 @@ authenticateUser()
 					<router-link to="/" class="menu-item">
 						<a>Главная</a>
 					</router-link>
-					<li class="menu-item">
+					<router-link to="/docs" class="menu-item">
 						<a>Документация</a>
-					</li>
+					</router-link>
 				</ul>
 			</div>
 			<div class="header-action">
@@ -110,7 +110,7 @@ authenticateUser()
 				<router-link to="/" @click="isMenuOpen = false">Главная</router-link>
 			</li>
 			<li class="mobile-menu-item">
-				<router-link to="/">Документация</router-link>
+				<router-link to="/docs">Документация</router-link>
 			</li>
 			<router-link
 				v-if="!isAuthenticated"

@@ -10,7 +10,6 @@ import RemoveResource from '@/components/Projects/Resource/RemoveResource.vue'
 import SettingsProject from '@/components/Projects/Project/SettingsProject.vue'
 import SettingsResource from '@/components/Projects/Resource/SettingsResource.vue'
 import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
 
 const props = defineProps({
 	id: {
@@ -34,7 +33,6 @@ const resourceIdToRemove = ref(null)
 const isNotFound = ref(false)
 const isLoaderVisible = ref(true)
 const list = ref(true)
-const toast = useToast()
 const token = Cookies.get('token')
 const router = useRouter()
 const items = ref([])
@@ -87,25 +85,6 @@ const iconColor = computed(() => {
 const firstLetter = computed(() => {
 	return project.value.name ? project.value.name.charAt(0).toUpperCase() : ''
 })
-
-async function toastification() {
-	if (localStorage.getItem('resourceCreated') === 'true') {
-		toast.success('Ресурс успешно создан!')
-		localStorage.removeItem('resourceCreated')
-	}
-	if (localStorage.getItem('resourceRemoved') === 'true') {
-		toast.success('Ресурс успешно удален!')
-		localStorage.removeItem('resourceRemoved')
-	}
-	if (localStorage.getItem('projectUpdated') === 'true') {
-		toast.success('Проект успешно обновлен!')
-		localStorage.removeItem('projectUpdated')
-	}
-	if (localStorage.getItem('resourceUpdated') === 'true') {
-		toast.success('Ресурс успешно обновлен!')
-		localStorage.removeItem('resourceUpdated')
-	}
-}
 
 onMounted(() => {
 	if (!token) {

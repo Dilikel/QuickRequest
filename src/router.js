@@ -1,61 +1,59 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/pages/Home.vue'
-import Login from '@/pages/Auth/Login.vue'
-import Signup from './pages/Auth/Signup.vue'
-import Profile from '@/pages/User/Profile.vue'
-import Projects from '@/pages/Projects.vue'
-import Project from '@/pages/Project.vue'
-import PrivacyPolicy from './pages/PrivacyPolicy.vue'
-import Error from './Error.vue'
 
 const routes = [
 	{
 		path: '/',
 		name: 'Home',
-		component: Home,
+		component: () => import('./pages/Home.vue'),
 		meta: { layout: 'Default' },
 	},
 	{
 		path: '/login',
 		name: 'Login',
-		component: Login,
+		component: () => import('./pages/Auth/Login.vue'),
 		meta: { layout: 'Default' },
 	},
 	{
 		path: '/signup',
 		name: 'Signup',
-		component: Signup,
+		component: () => import('./pages/Auth/Signup.vue'),
 		meta: { layout: 'Default' },
 	},
 	{
 		path: '/profile',
 		name: 'Profile',
-		component: Profile,
+		component: () => import('./pages/User/Profile.vue'),
 		meta: { layout: 'Default' },
 	},
 	{
 		path: '/projects',
 		name: 'Projects',
-		component: Projects,
+		component: () => import('./pages/Projects.vue'),
 		meta: { layout: 'Default' },
 	},
 	{
 		path: '/projects/:id',
 		name: 'Project',
-		component: Project,
+		component: () => import('./pages/Project.vue'),
 		props: true,
 		meta: { layout: 'Default' },
 	},
 	{
 		path: '/privacy-policy',
 		name: 'PrivacyPolicy',
-		component: PrivacyPolicy,
+		component: () => import('./pages/PrivacyPolicy.vue'),
+		meta: { layout: 'Default' },
+	},
+	{
+		path: '/docs',
+		name: 'Docs',
+		component: () => import('./pages/Docs.vue'),
 		meta: { layout: 'Default' },
 	},
 	{
 		path: '/:catchAll(.*)',
 		name: 'Error',
-		component: Error,
+		component: () => import('./Error.vue'),
 		meta: { layout: 'Default' },
 	},
 ]
