@@ -10,6 +10,7 @@ const emit = defineEmits(['close'])
 const token = Cookies.get('token')
 const toast = useToast()
 const isLoading = ref(false)
+const isCreateButtonDisabled = ref(true)
 
 const closeModal = () => {
 	emit('close')
@@ -37,10 +38,10 @@ async function createProject() {
 			}
 		})
 		.catch(error => {
-			console.error('Error creating project:', err)
+			console.error('Error creating project:', error)
 			toast.error(
 				'Ошибка при создании проекта: ' +
-					(err.response?.data?.message || 'Попробуйте снова.')
+					(error.response?.data?.message || 'Попробуйте снова.')
 			)
 		})
 		.finally(() => {
@@ -67,7 +68,7 @@ watch(projectName, newValue => {
 				<button
 					class="create-button"
 					@click="createProject"
-					:disabled="isLoading"
+					:disabled="isCreateButtonDisabled || isLoading"
 				>
 					{{ isLoading ? 'Подождите...' : 'Создать проект' }}
 				</button>

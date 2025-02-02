@@ -123,7 +123,6 @@ async function fetchItems() {
 </template>
 
 <style scoped>
-/* Основной контейнер */
 .container {
 	min-height: 100vh;
 	background-color: #121212;
@@ -135,7 +134,6 @@ async function fetchItems() {
 	font-family: 'Arial', sans-serif;
 }
 
-/* Заголовок */
 .title {
 	text-align: center;
 	max-width: 900px;
@@ -154,12 +152,10 @@ async function fetchItems() {
 	display: inline;
 }
 
-/* Элемент для текста и кнопки в одной строке */
 .intro-text {
 	display: inline;
 }
 
-/* Кнопка-ссылка */
 .btn-link {
 	color: #ff8a00;
 	text-decoration: none;
@@ -172,7 +168,6 @@ async function fetchItems() {
 	text-decoration: underline;
 }
 
-/* Основная секция */
 .main {
 	max-width: 1200px;
 	width: 100%;
@@ -232,7 +227,6 @@ code {
 	text-decoration: underline;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
 	.container {
 		padding: 30px 10px;

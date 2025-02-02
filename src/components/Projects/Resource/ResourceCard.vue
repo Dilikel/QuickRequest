@@ -25,7 +25,7 @@ const handleRemove = () => {
 }
 
 const handleSettings = () => {
-  emit('settings-resource', props.resourceId)
+	emit('settings-resource', props.resourceId)
 }
 
 const openResourceUrl = () => {
@@ -43,7 +43,11 @@ const openResourceUrl = () => {
 			<div class="id">ID: {{ props.resourceId }}</div>
 		</div>
 		<div class="actions">
-			<button class="settings-btn" aria-label="Settings" @click="handleSettings">
+			<button
+				class="settings-btn"
+				aria-label="Settings"
+				@click="handleSettings"
+			>
 				<img src="/icons/settings-icon.svg" alt="settings" />
 			</button>
 			<button class="delete-btn" aria-label="Delete" @click="handleRemove">
@@ -54,13 +58,6 @@ const openResourceUrl = () => {
 </template>
 
 <style scoped>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
-}
-
 .resource-card {
 	display: flex;
 	justify-content: space-between;
@@ -90,7 +87,7 @@ const openResourceUrl = () => {
 	width: 15px;
 	height: 15px;
 	margin-bottom: 2px;
-  user-select: none;
+	user-select: none;
 }
 
 .name:hover {
@@ -114,7 +111,7 @@ const openResourceUrl = () => {
 	border: none;
 	cursor: pointer;
 	transition: transform 0.3s ease;
-  user-select: none;
+	user-select: none;
 }
 
 .settings-btn:hover,
