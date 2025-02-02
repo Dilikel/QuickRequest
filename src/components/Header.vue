@@ -52,10 +52,18 @@ authenticateUser()
 <template>
 	<header class="header">
 		<div class="container">
-			<router-link to="/" class="logo"> QuickRequest </router-link>
+			<router-link to="/" class="logo" v-if="!isAuthenticated">
+				QuickRequest
+			</router-link>
+			<router-link to="/projects" class="logo" v-else>
+				QuickRequest
+			</router-link>
 			<div class="menu">
 				<ul class="menu-list">
-					<router-link to="/" class="menu-item">
+					<router-link to="/" class="menu-item" v-if="!isAuthenticated">
+						<a>Главная</a>
+					</router-link>
+					<router-link to="/projects" class="menu-item" v-else>
 						<a>Главная</a>
 					</router-link>
 					<router-link to="/docs" class="menu-item">

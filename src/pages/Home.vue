@@ -1,21 +1,3 @@
-<script setup>
-import Cookies from 'js-cookie'
-import router from '@/router'
-
-const token = Cookies.get('token')
-
-function UserIsAuthenticated() {
-	if (!token) {
-		return
-	}
-	if (token) {
-		router.push('/projects')
-	}
-}
-
-UserIsAuthenticated()
-</script>
-
 <template>
 	<div class="home">
 		<div class="container">
