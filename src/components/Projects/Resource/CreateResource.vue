@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
-import { useRouter } from 'vue-router'
 
 const props = defineProps({
 	id: {
@@ -18,8 +17,8 @@ const jsonData = ref('')
 const objects = ref([{ id: 1, name: '', additionalParams: {} }])
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
-const router = useRouter()
 const toast = useToast()
+const isLoading = ref(false)
 
 const closeModal = () => {
 	emit('close')
@@ -71,6 +70,7 @@ const isFormValid = computed(() => {
 
 async function createResource() {
 	try {
+		isLoading.value = true
 		let data = ''
 		if (mode.value === 'generator') {
 			data = {
@@ -110,15 +110,17 @@ async function createResource() {
 			}
 		)
 		if (response.status === 201) {
+			toast.success('Ресурс успешно создан!')
+			emit('resourceCreated')
 			closeModal()
-			localStorage.setItem('resourceCreated', 'true')
-			router.go()
 		} else {
 			console.error('Ошибка при создании ресурса:', response.data)
 		}
 	} catch (err) {
 		toast.error('Ошибка при создании ресурса. Проверьте параметры.')
 		console.error('Ошибка при создании ресурса:', err)
+	} finally {
+		isLoading.value = false
 	}
 }
 
@@ -229,23 +231,16 @@ const inputButtonStyle = computed(() => ({
 			<button
 				type="submit"
 				class="submit-btn"
-				:disabled="!isFormValid"
+				:disabled="isLoading || !isFormValid"
 				@click="createResource"
 			>
-				Создать ресурс
+				{{ isLoading ? 'Подождите...' : 'Создать ресурс' }}
 			</button>
 		</div>
 	</div>
 </template>
 
 <style scoped>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
-}
-
 .create-resource {
 	position: fixed;
 	top: 0;

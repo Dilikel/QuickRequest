@@ -112,7 +112,6 @@ onMounted(() => {
 		router.push({ name: 'Home' })
 	}
 	fetchProject()
-	toastification()
 })
 </script>
 
@@ -125,16 +124,19 @@ onMounted(() => {
 				:id="props.id"
 				:resourceId="resourceIdToRemove"
 				@close="isResourceProjectOpen = false"
+				@resourceUpdated="fetchProject"
 			/>
 			<SettingsProject
 				v-if="isSettingsProjectOpen"
 				:projectId="props.id"
 				@close="isSettingsProjectOpen = false"
+				@projectUpdated="fetchProject"
 			/>
 			<CreateResource
 				v-if="isCreateResourceOpen"
 				:id="props.id"
 				@close="isCreateResourceOpen = false"
+				@resourceCreated="fetchProject"
 			/>
 			<RemoveProject
 				v-if="isRemoveProjectOpen"
@@ -146,6 +148,7 @@ onMounted(() => {
 				:id="props.id"
 				:resourceId="resourceIdToRemove"
 				@close="isRemoveResourceOpen = false"
+				@remove-resource="fetchProject"
 			/>
 			<div class="project">
 				<div class="container">

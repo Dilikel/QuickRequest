@@ -64,7 +64,11 @@ onMounted(() => {
 				</div>
 			</div>
 		</div>
-		<CreateProject v-if="isCreateOpen" @close="isCreateOpen = false" />
+		<CreateProject
+			v-if="isCreateOpen"
+			@close="isCreateOpen = false"
+			@projectCreated="fetchItems"
+		/>
 	</div>
 </template>
 

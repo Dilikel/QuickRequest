@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
-import { useRouter } from 'vue-router'
 
 const props = defineProps({
 	id: {
@@ -19,8 +18,8 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
 const body = ref('')
-const res_router = useRouter()
 const toast = useToast()
+const isLoading = ref(false)
 
 const closeModal = () => {
 	emit('close')
@@ -55,6 +54,7 @@ async function fetchResource() {
 }
 
 async function saveResource() {
+	isLoading.value = true
 	await axios
 		.patch(
 			`${import.meta.env.VITE_API_URL}/projects/change/resource`,
@@ -72,14 +72,17 @@ async function saveResource() {
 		)
 		.then(response => {
 			if (response.status === 200) {
-				localStorage.setItem('resourceUpdated', 'true')
+				toast.success('Ресурс успешно обновлен!')
+				emit('resourceUpdated')
 				closeModal()
-				res_router.go()
 			}
 		})
 		.catch(error => {
 			console.log(err)
 			toast.error('Произошла ошибка при обновлении ресурса!')
+		})
+		.finally(() => {
+			isLoading.value = false
 		})
 }
 
@@ -107,21 +110,19 @@ fetchResource()
 					required
 				></textarea>
 			</div>
-			<button type="submit" class="submit-btn" @click="saveResource">
-				Сохранить ресурс
+			<button
+				type="submit"
+				class="submit-btn"
+				@click="saveResource"
+				:disabled="isLoading"
+			>
+				{{ isLoading ? 'Подождите...' : 'Сохранить' }}
 			</button>
 		</div>
 	</div>
 </template>
 
 <style scoped>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Montserrat', sans-serif;
-}
-
 .settings-resource {
 	position: fixed;
 	top: 0;
@@ -273,7 +274,8 @@ h3 {
 }
 
 .submit-btn:disabled {
-	background: #ccc;
+	color: #aaa;
+	background: #555;
 	cursor: not-allowed;
 }
 

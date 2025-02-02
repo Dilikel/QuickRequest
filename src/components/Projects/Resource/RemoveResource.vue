@@ -1,9 +1,9 @@
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
-import { useRouter } from 'vue-router'
+import { defineEmits } from 'vue'
 
 const props = defineProps({
 	id: {
@@ -18,8 +18,8 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
-const resRouter = useRouter()
 const toast = useToast()
+const isLoading = ref(false)
 
 const closeModal = () => {
 	emit('close')
@@ -27,6 +27,7 @@ const closeModal = () => {
 
 async function removeResource() {
 	try {
+		isLoading.value = true
 		const response = await axios.delete(
 			`${import.meta.env.VITE_API_URL}/projects/remove/${props.id}/resource/${
 				props.resourceId
@@ -38,13 +39,15 @@ async function removeResource() {
 			}
 		)
 		if (response.status === 200) {
+			toast.success('Ресурс успешно удален!')
+			emit('remove-resource', props.resourceId)
 			closeModal()
-			localStorage.setItem('resourceRemoved', 'true')
-			resRouter.go()
 		}
 	} catch (error) {
 		console.error('Ошибка при удалении ресурса:', error)
 		toast.error('Ошибка при удалении ресурса:', error)
+	} finally {
+		isLoading.value = false
 	}
 }
 </script>
@@ -54,7 +57,13 @@ async function removeResource() {
 		<div class="remove-resource-modal" @click.stop>
 			<h3>Вы уверены, что хотите удалить ресурс?</h3>
 			<div class="actions">
-				<button class="remove-btn" @click="removeResource">Да</button>
+				<button
+					class="remove-btn"
+					@click="removeResource"
+					:disabled="isLoading"
+				>
+					{{ isLoading ? 'Подождите...' : 'Да' }}
+				</button>
 				<button class="back-btn" @click="closeModal">Отмена</button>
 			</div>
 		</div>
@@ -118,8 +127,15 @@ async function removeResource() {
 	transition: background-color 0.3s ease;
 }
 
-.remove-btn:hover {
+.remove-btn:hover:enabled {
 	background-color: #e04343;
+}
+
+.remove-btn:disabled {
+	background: #555;
+	color: #aaa;
+	cursor: not-allowed;
+	box-shadow: none;
 }
 
 .back-btn {

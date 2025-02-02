@@ -13,12 +13,12 @@ const props = defineProps({
 })
 const emit = defineEmits(['close'])
 const token = Cookies.get('token')
-const router = useRouter()
 const toast = useToast()
 const project = ref({
 	name: '',
 	projectId: '',
 })
+const isLoading = ref(false)
 const closeModal = () => {
 	emit('close')
 }
@@ -40,6 +40,7 @@ async function fetchProject() {
 }
 
 async function saveProject() {
+	isLoading.value = true
 	await axios
 		.patch(
 			`${import.meta.env.VITE_API_URL}/projects/${props.projectId}/change/name`,
@@ -52,14 +53,17 @@ async function saveProject() {
 		)
 		.then(response => {
 			if (response.status === 200) {
-				localStorage.setItem('projectUpdated', 'true')
+				toast.success('Проект успешно обновлен!')
+				emit('projectUpdated')
 				closeModal()
-				router.go()
 			}
 		})
 		.catch(error => {
 			console.error('Error fetching projects:', error)
 			toast.error('Произошла ошибка при обновлении проекта!')
+		})
+		.finally(() => {
+			isLoading.value = false
 		})
 }
 
@@ -82,7 +86,9 @@ fetchProject()
 				/>
 			</div>
 			<div class="action">
-				<button class="save-btn" @click="saveProject">Сохранить</button>
+				<button class="save-btn" @click="saveProject" :disabled="isLoading">
+					{{ isLoading ? 'Подождите...' : 'Сохранить' }}
+				</button>
 			</div>
 		</div>
 	</div>
@@ -180,7 +186,14 @@ fetchProject()
 	cursor: pointer;
 }
 
-.save-btn:hover {
+.save-btn:disabled {
+	background: #555;
+	color: #aaa;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+.save-btn:hover:enabled {
 	background: linear-gradient(90deg, #ff7a00, #ff5656);
 	transform: translateY(-4px);
 	box-shadow: 0 10px 25px rgba(255, 107, 107, 0.7);
