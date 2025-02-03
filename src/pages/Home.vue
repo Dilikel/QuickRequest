@@ -1,3 +1,18 @@
+<script setup>
+import { onMounted } from 'vue'
+import Cookies from 'js-cookie'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const token = Cookies.get('token')
+
+onMounted(() => {
+	if (token) {
+		router.push('/projects')
+	}
+})
+</script>
+
 <template>
 	<div class="home">
 		<div class="container">
