@@ -2,10 +2,9 @@
 import ProjectCardList from '@/components/Projects/Project/ProjectCardList.vue'
 import CreateProject from '@/components/Projects/Project/CreateProject.vue'
 import Loader from '@/components/Loader.vue'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import router from '@/router.js'
 
 const isCreateOpen = ref(false)
 const token = Cookies.get('token')
@@ -33,9 +32,6 @@ async function fetchItems() {
 }
 
 onMounted(() => {
-	if (!token) {
-		router.push({ name: 'Home' })
-	}
 	fetchItems()
 })
 </script>

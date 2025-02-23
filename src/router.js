@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import AuthMiddleware from '@/middleware/auth'
 
 const routes = [
 	{
@@ -12,24 +13,28 @@ const routes = [
 		name: 'Login',
 		component: () => import('./pages/Auth/Login.vue'),
 		meta: { layout: 'Default' },
+		beforeEnter: AuthMiddleware,
 	},
 	{
 		path: '/signup',
 		name: 'Signup',
 		component: () => import('./pages/Auth/Signup.vue'),
 		meta: { layout: 'Default' },
+		beforeEnter: AuthMiddleware,
 	},
 	{
 		path: '/profile',
 		name: 'Profile',
 		component: () => import('./pages/User/Profile.vue'),
 		meta: { layout: 'Default' },
+		beforeEnter: AuthMiddleware,
 	},
 	{
 		path: '/projects',
 		name: 'Projects',
 		component: () => import('./pages/Projects.vue'),
 		meta: { layout: 'Default' },
+		beforeEnter: AuthMiddleware,
 	},
 	{
 		path: '/projects/:id',
@@ -37,6 +42,7 @@ const routes = [
 		component: () => import('./pages/Project.vue'),
 		props: true,
 		meta: { layout: 'Default' },
+		beforeEnter: AuthMiddleware,
 	},
 	{
 		path: '/privacy-policy',

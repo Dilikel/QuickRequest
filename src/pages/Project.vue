@@ -9,7 +9,6 @@ import CreateResource from '@/components/Projects/Resource/CreateResource.vue'
 import RemoveResource from '@/components/Projects/Resource/RemoveResource.vue'
 import SettingsProject from '@/components/Projects/Project/SettingsProject.vue'
 import SettingsResource from '@/components/Projects/Resource/SettingsResource.vue'
-import { useRouter } from 'vue-router'
 
 const props = defineProps({
 	id: {
@@ -34,7 +33,6 @@ const isNotFound = ref(false)
 const isLoaderVisible = ref(true)
 const list = ref(true)
 const token = Cookies.get('token')
-const router = useRouter()
 const items = ref([])
 
 async function fetchProject() {
@@ -87,9 +85,6 @@ const firstLetter = computed(() => {
 })
 
 onMounted(() => {
-	if (!token) {
-		router.push({ name: 'Home' })
-	}
 	fetchProject()
 })
 </script>

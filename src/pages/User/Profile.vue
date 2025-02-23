@@ -1,12 +1,11 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import Cookies from 'js-cookie'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-const token = Cookies.get('token')
 const isEditing = ref(false)
 const toast = useToast()
 const userStore = useUserStore()
@@ -30,13 +29,6 @@ const toggleEditMode = () => {
 const saveProfile = () => {
 	toggleEditMode()
 }
-
-onMounted(() => {
-	if (!token) {
-		router.push({ name: 'Home' })
-		toast.error('Вы не авторизованы!')
-	}
-})
 </script>
 
 <template>
